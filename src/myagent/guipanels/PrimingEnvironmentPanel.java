@@ -16,26 +16,26 @@ import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
-import myagent.modules.WebotsEnvironment;
+import myagent.modules.PrimingEnvironment;
 import edu.memphis.ccrg.lida.framework.ModuleName;
 import edu.memphis.ccrg.lida.framework.gui.panels.GuiPanel;
 import edu.memphis.ccrg.lida.framework.gui.panels.GuiPanelImpl;
 import java.util.Map;
 
 /**
- * A {@link GuiPanel} for the {@link WebotsEnvironment}
+ * A {@link GuiPanel} for the {@link PrimingEnvironment}
  * @author Ryan McCall
  * @author Javier Snaider
  */
-public class WebotsEnvironmentPanel extends GuiPanelImpl {
+public class PrimingEnvironmentPanel extends GuiPanelImpl {
 
-    private static final Logger logger = Logger.getLogger(WebotsEnvironmentPanel.class.getCanonicalName());
-    private WebotsEnvironment environment;
-    private BufferedImage img = new BufferedImage(WebotsEnvironment.ENVIRONMENT_WIDTH,
-            WebotsEnvironment.ENVIRONMENT_HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private static final Logger logger = Logger.getLogger(PrimingEnvironmentPanel.class.getCanonicalName());
+    private PrimingEnvironment environment;
+    private BufferedImage img = new BufferedImage(PrimingEnvironment.ENVIRONMENT_WIDTH,
+            PrimingEnvironment.ENVIRONMENT_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
     /** Creates new form ButtonEnvironmentPanel */
-    public WebotsEnvironmentPanel() {
+    public PrimingEnvironmentPanel() {
         initComponents();
     }
 
@@ -111,7 +111,7 @@ public class WebotsEnvironmentPanel extends GuiPanelImpl {
 
     @Override
     public void initPanel(String[] param) {
-        environment = (WebotsEnvironment) agent.getSubmodule(ModuleName.Environment);
+        environment = (PrimingEnvironment) agent.getSubmodule(ModuleName.Environment);
         if (environment != null) {
             refresh();
         } else {

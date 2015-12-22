@@ -8,6 +8,10 @@ import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
 
 public class PrimingEnvironment extends EnvironmentImpl{
 
+
+    public static final int ENVIRONMENT_WIDTH = 100;
+    public static final int ENVIRONMENT_HEIGHT = 100;
+
     private Map<String, Object> blankData= new HashMap<String, Object>();
     private Map<String, Object> targetData= new HashMap<String, Object>();
     private Map<String, Object> consistentPrimingData= new HashMap<String, Object>();
