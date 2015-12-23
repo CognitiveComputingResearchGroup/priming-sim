@@ -20,6 +20,8 @@ import myagent.modules.PrimingEnvironment;
 import edu.memphis.ccrg.lida.framework.ModuleName;
 import edu.memphis.ccrg.lida.framework.gui.panels.GuiPanel;
 import edu.memphis.ccrg.lida.framework.gui.panels.GuiPanelImpl;
+import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
+
 import java.util.Map;
 
 /**
@@ -137,6 +139,7 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 
     }
 
+    private static final int DOT_SIZE=2;
     private class ImagePanel extends JPanel {
 
         private Dimension dimension = new Dimension();
@@ -151,7 +154,26 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
             g.clearRect(0,0, getWidth(), getHeight());
             Image scaledImage = img.getScaledInstance((int)(img.getWidth()*scalingFactor), (int)(img.getHeight()*scalingFactor), Image.SCALE_SMOOTH);
             int xCentered = (getWidth() - scaledImage.getWidth(this)) / 2;
-            int yCentered = (getHeight() - scaledImage.getHeight(this)) / 2;
+            int yCentered = (getHeight()
+		if(TaskManager.getCurrentTick()<700){
+			//blank data
+            img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+		}
+		else if(TaskManager.getCurrentTick()>700 && TaskManager.getCurrentTick()<(10+700)){
+			if(getParam("consistent", true)){
+			 return consistentPrimingData;	
+			}
+			else{
+				return unconsistentPrimingData;
+			}
+		}
+		else if(TaskManager.getCurrentTick()>(10+700) && TaskManager.getCurrentTick()<(blankDuration+10+700)){
+			//blank data
+            img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+		}
+		else{
+			return targetData;
+		}
             g.drawImage(scaledImage, xCentered, yCentered, this);
         }
     }
