@@ -141,6 +141,7 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 
 	private static final int DOT_SIZE=2;
 	private static final int DISC_SIZE=8;
+	private static final int ANNULI_SIZE=10;
 	private class ImagePanel extends JPanel {
 
 		private Dimension dimension = new Dimension();
@@ -179,8 +180,8 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 			}
 			else{
 				img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
-				img.getGraphics().drawOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
-				img.getGraphics().drawOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+				img.getGraphics().drawOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
+				img.getGraphics().drawOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
 			}
 			g.drawImage(scaledImage, xCentered, yCentered, this);
 		}
