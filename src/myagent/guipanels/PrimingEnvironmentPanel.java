@@ -7,6 +7,7 @@
  *******************************************************************************/
 package myagent.guipanels;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -26,8 +27,7 @@ import java.util.Map;
 
 /**
  * A {@link GuiPanel} for the {@link PrimingEnvironment}
- * @author Ryan McCall
- * @author Javier Snaider
+ * @author Pulin Agrawal 
  */
 public class PrimingEnvironmentPanel extends GuiPanelImpl {
 
@@ -164,14 +164,18 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 			}
 			else if(TaskManager.getCurrentTick()>700 && TaskManager.getCurrentTick()<(10+700)){
 				if(environment.getParam("consistent", true)){
-					img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
-					img.getGraphics().drawOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
-					img.getGraphics().drawOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+					img.getGraphics().fillOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+					img.getGraphics().setColor(Color.GREEN);
+					img.getGraphics().fillOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+					img.getGraphics().setColor(Color.RED);
+					img.getGraphics().fillOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
 				}
 				else{
-					img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
-					img.getGraphics().drawOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
-					img.getGraphics().drawOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+					img.getGraphics().fillOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+					img.getGraphics().setColor(Color.RED);
+					img.getGraphics().fillOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+					img.getGraphics().setColor(Color.GREEN);
+					img.getGraphics().fillOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
 				}
 			}
 			else if(TaskManager.getCurrentTick()>(10+700) && TaskManager.getCurrentTick()<(environment.getParam("blankDuration", 0)+10+700)){
@@ -180,7 +184,9 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 			}
 			else{
 				img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+				img.getGraphics().setColor(Color.RED);
 				img.getGraphics().drawOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
+				img.getGraphics().setColor(Color.GREEN);
 				img.getGraphics().drawOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
 			}
 			g.drawImage(scaledImage, xCentered, yCentered, this);
