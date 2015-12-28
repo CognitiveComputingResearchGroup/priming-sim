@@ -139,8 +139,8 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 
 	}
 
-	private static final int DOT_SIZE=2;
-	private static final int DISC_SIZE=8;
+	private static final int DOT_SIZE=1;
+	private static final int DISC_SIZE=9;
 	private static final int ANNULI_SIZE=10;
 	private class ImagePanel extends JPanel {
 
@@ -154,41 +154,42 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 		@Override
 		protected void paintComponent(Graphics g) {
 			g.clearRect(0,0, getWidth(), getHeight());
-			Image scaledImage = img.getScaledInstance((int)(img.getWidth()*scalingFactor), (int)(img.getHeight()*scalingFactor), Image.SCALE_SMOOTH);
-			int xCentered = (getWidth() - scaledImage.getWidth(this)) / 2;
-			int yCentered = (getHeight()- scaledImage.getHeight(this)) / 2;
-
+			Graphics biG=img.getGraphics();
 			if(TaskManager.getCurrentTick()<700){
 				//blank data
-				img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}
 			else if(TaskManager.getCurrentTick()>700 && TaskManager.getCurrentTick()<(10+700)){
 				if(environment.getParam("consistent", true)){
-					img.getGraphics().fillOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
-					img.getGraphics().setColor(Color.GREEN);
-					img.getGraphics().fillOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
-					img.getGraphics().setColor(Color.RED);
-					img.getGraphics().fillOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+					biG.fillOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+					biG.setColor(Color.GREEN);
+					biG.fillOval(img.getWidth()/6-PrimingEnvironmentPanel.DISC_SIZE/2, img.getHeight()*5/6-PrimingEnvironmentPanel.DISC_SIZE/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+					biG.setColor(Color.RED);
+					biG.fillOval(img.getWidth()*5/6-PrimingEnvironmentPanel.DISC_SIZE/2, img.getHeight()/6-PrimingEnvironmentPanel.DISC_SIZE/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
 				}
 				else{
-					img.getGraphics().fillOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
-					img.getGraphics().setColor(Color.RED);
-					img.getGraphics().fillOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
-					img.getGraphics().setColor(Color.GREEN);
-					img.getGraphics().fillOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+					biG.fillOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+					biG.setColor(Color.RED);
+					biG.fillOval(img.getWidth()/6-PrimingEnvironmentPanel.DISC_SIZE/2, img.getHeight()*5/6-PrimingEnvironmentPanel.DISC_SIZE/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
+					biG.setColor(Color.GREEN);
+					biG.fillOval(img.getWidth()*5/6-PrimingEnvironmentPanel.DISC_SIZE/2, img.getHeight()/6-PrimingEnvironmentPanel.DISC_SIZE/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
 				}
 			}
 			else if(TaskManager.getCurrentTick()>(10+700) && TaskManager.getCurrentTick()<(environment.getParam("blankDuration", 0)+10+700)){
 				//blank data
-				img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}
 			else{
-				img.getGraphics().drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
-				img.getGraphics().setColor(Color.RED);
-				img.getGraphics().drawOval(img.getWidth()/6, img.getHeight()*5/6, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
-				img.getGraphics().setColor(Color.GREEN);
-				img.getGraphics().drawOval(img.getWidth()*5/6, img.getHeight()/2, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
+				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
+				biG.setColor(Color.GREEN);
+				biG.drawOval(img.getWidth()/6-PrimingEnvironmentPanel.ANNULI_SIZE/2, img.getHeight()*5/6-PrimingEnvironmentPanel.ANNULI_SIZE/2, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
+				biG.setColor(Color.RED);
+				biG.drawOval(img.getWidth()*5/6-PrimingEnvironmentPanel.ANNULI_SIZE/2, img.getHeight()/6-PrimingEnvironmentPanel.ANNULI_SIZE/2, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
 			}
+			Image scaledImage = img.getScaledInstance((int)(img.getWidth()*scalingFactor), (int)(img.getHeight()*scalingFactor), Image.SCALE_SMOOTH);
+			int xCentered = (getWidth() - scaledImage.getWidth(this)) / 2;
+			int yCentered = (getHeight()- scaledImage.getHeight(this)) / 2;
+
 			g.drawImage(scaledImage, xCentered, yCentered, this);
 		}
 	}
