@@ -34,19 +34,19 @@ public class PrimingEnvironment extends EnvironmentImpl{
 	targetData.put("annulus2_Xpos", 0);
 	targetData.put("annulus2_Ypos", 0);
 
-	consistentPrimingData.put("circle1_color", "red");	
-	consistentPrimingData.put("circle2_color", "green");	
-	consistentPrimingData.put("circle1_Xpos", 2);
-	consistentPrimingData.put("circle1_Ypos", 2);
-	consistentPrimingData.put("circle2_Xpos", 0);
-	consistentPrimingData.put("circle2_Ypos", 0);
+	consistentPrimingData.put("disc1_color", "red");	
+	consistentPrimingData.put("disc2_color", "green");	
+	consistentPrimingData.put("disc1_Xpos", 2);
+	consistentPrimingData.put("disc1_Ypos", 2);
+	consistentPrimingData.put("disc2_Xpos", 0);
+	consistentPrimingData.put("disc2_Ypos", 0);
 
-	unconsistentPrimingData.put("circle1_color", "red");	
-	unconsistentPrimingData.put("circle2_color", "green");	
-	unconsistentPrimingData.put("circle1_Xpos", 0);
-	unconsistentPrimingData.put("circle1_Ypos", 0);
-	unconsistentPrimingData.put("circle2_Xpos", 2);
-	unconsistentPrimingData.put("circle2_Ypos", 2);
+	unconsistentPrimingData.put("disc1_color", "red");	
+	unconsistentPrimingData.put("disc2_color", "green");	
+	unconsistentPrimingData.put("disc1_Xpos", 0);
+	unconsistentPrimingData.put("disc1_Ypos", 0);
+	unconsistentPrimingData.put("disc2_Xpos", 2);
+	unconsistentPrimingData.put("disc2_Ypos", 2);
 
 	}
 

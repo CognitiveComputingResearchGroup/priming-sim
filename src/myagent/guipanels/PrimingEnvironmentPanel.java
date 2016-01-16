@@ -155,6 +155,7 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 		protected void paintComponent(Graphics g) {
 			g.clearRect(0,0, getWidth(), getHeight());
 			Graphics biG=img.getGraphics();
+			biG.clearRect(0, 0, img.getWidth(), img.getHeight());
 			if(TaskManager.getCurrentTick()<700){
 				//blank data
 				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
@@ -174,6 +175,7 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 					biG.setColor(Color.GREEN);
 					biG.fillOval(img.getWidth()*5/6-PrimingEnvironmentPanel.DISC_SIZE/2, img.getHeight()/6-PrimingEnvironmentPanel.DISC_SIZE/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
 				}
+				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}
 			else if(TaskManager.getCurrentTick()>(10+700) && TaskManager.getCurrentTick()<(environment.getParam("blankDuration", 0)+10+700)){
 				//blank data
