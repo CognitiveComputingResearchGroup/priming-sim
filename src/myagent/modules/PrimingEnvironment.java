@@ -9,13 +9,16 @@ import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
 public class PrimingEnvironment extends EnvironmentImpl{
 
 
+	public static final int FIXATION_PERIOD=1;
+	public static final int PRIME_DURATION=2;
+
     public static final int ENVIRONMENT_WIDTH = 100;
     public static final int ENVIRONMENT_HEIGHT = 100;
 
     private Map<String, Object> blankData= new HashMap<String, Object>();
     private Map<String, Object> targetData= new HashMap<String, Object>();
     private Map<String, Object> consistentPrimingData= new HashMap<String, Object>();
-    private Map<String, Object> unconsistentPrimingData= new HashMap<String, Object>();
+    private Map<String, Object> inconsistentPrimingData= new HashMap<String, Object>();
     
     private int blankDuration=0;
 
@@ -27,44 +30,38 @@ public class PrimingEnvironment extends EnvironmentImpl{
 	blankData.put("dot_Xpos", 1);
 	blankData.put("dot_Ypos", 1);
 
-	targetData.put("annulus1_color", "red");	
-	targetData.put("annulus2_color", "green");	
-	targetData.put("annulus1_Xpos", 2);
-	targetData.put("annulus1_Ypos", 2);
-	targetData.put("annulus2_Xpos", 0);
-	targetData.put("annulus2_Ypos", 0);
 
-	consistentPrimingData.put("disc1_color", "red");	
-	consistentPrimingData.put("disc2_color", "green");	
-	consistentPrimingData.put("disc1_Xpos", 2);
-	consistentPrimingData.put("disc1_Ypos", 2);
-	consistentPrimingData.put("disc2_Xpos", 0);
-	consistentPrimingData.put("disc2_Ypos", 0);
+	targetData.put( "red",true);
+	targetData.put( "green",true);
+	targetData.put("red_position", 1);
+	targetData.put("green_position", 3);
 
-	unconsistentPrimingData.put("disc1_color", "red");	
-	unconsistentPrimingData.put("disc2_color", "green");	
-	unconsistentPrimingData.put("disc1_Xpos", 0);
-	unconsistentPrimingData.put("disc1_Ypos", 0);
-	unconsistentPrimingData.put("disc2_Xpos", 2);
-	unconsistentPrimingData.put("disc2_Ypos", 2);
+	consistentPrimingData.put("red", true);
+	consistentPrimingData.put("green", true );
+	consistentPrimingData.put("red_position", 1);
+	consistentPrimingData.put("green_position", 3);
 
+	inconsistentPrimingData.put( "red",true);
+	inconsistentPrimingData.put( "green",true);
+	inconsistentPrimingData.put("red_position", 3);
+	inconsistentPrimingData.put("green_position", 1);
 	}
 
 	@Override
 	public Object getState(Map<String, ?> arg0) {
 
-		if(TaskManager.getCurrentTick()<700){
+		if(TaskManager.getCurrentTick()<=FIXATION_PERIOD){
 			return blankData;
 		}
-		else if(TaskManager.getCurrentTick()>700 && TaskManager.getCurrentTick()<(10+700)){
+		else if(TaskManager.getCurrentTick()>FIXATION_PERIOD && TaskManager.getCurrentTick()<=(PRIME_DURATION+FIXATION_PERIOD)){
 			if(getParam("consistent", true)){
 			 return consistentPrimingData;	
 			}
 			else{
-				return unconsistentPrimingData;
+				return inconsistentPrimingData;
 			}
 		}
-		else if(TaskManager.getCurrentTick()>(10+700) && TaskManager.getCurrentTick()<(blankDuration+10+700)){
+		else if(TaskManager.getCurrentTick()>(PRIME_DURATION+FIXATION_PERIOD) && TaskManager.getCurrentTick()<=(blankDuration+PRIME_DURATION+FIXATION_PERIOD)){
 			return blankData;
 		}
 		else{

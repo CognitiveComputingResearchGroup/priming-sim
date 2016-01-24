@@ -91,6 +91,17 @@
         </link>
     </links>
     <tasks>
+        <task name="locationDetector">
+            <class>myagent.featuredetectors.LocationFeatureDetector</class>
+            <ticksperrun>1</ticksperrun>
+            <associatedmodule>SensoryMemory</associatedmodule>
+            <associatedmodule>PerceptualAssociativeMemory</associatedmodule>
+            <param name="learnable.baseLevelActivation" type="double">0.0</param>
+            <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
+            <param name="learnable.baseLevelDecayStrategy" type="string">defaultDecay</param>
+            <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
+            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
+        </task>
         <task name="intensityDetector">
             <class>myagent.featuredetectors.IntensityFeatureDetector</class>
             <ticksperrun>5</ticksperrun>

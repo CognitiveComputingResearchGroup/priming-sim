@@ -22,7 +22,7 @@ public class PrimingSensoryMemory extends SensoryMemoryImpl {
      * a subset of light content
      */
     private static final Logger logger = Logger.getLogger(PrimingSensoryMemory.class.getCanonicalName());
-    private Map<String, Object> mapRange = new HashMap<String, Object>();
+    private Map<String, Object> sensedData = new HashMap<String, Object>();
     private Map<String, Object> sensorParam = new HashMap<String, Object>();
 
     @Override
@@ -32,12 +32,16 @@ public class PrimingSensoryMemory extends SensoryMemoryImpl {
 
     @Override
     public void runSensors() {
+    	sensedData = (HashMap) environment.getState(sensorParam);
 
+        for (SensoryMemoryListener listener : sensoryMemoryListeners) {
+            listener.receiveSensoryMemoryContent(sensedData);
+        }
     }
 
     @Override
     public Object getSensoryContent(String string, Map<String, Object> params) {
-        return null;
+    	return sensedData.get(string);
     }
 
     @Override
