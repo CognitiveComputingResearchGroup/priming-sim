@@ -14,7 +14,7 @@ import java.util.Map;
 import edu.memphis.ccrg.lida.pam.tasks.BasicDetectionAlgorithm;
 import java.awt.Color;
 
-public class RedLocationFeatureDetector extends BasicDetectionAlgorithm{
+public class ColorFeatureDetector extends BasicDetectionAlgorithm{
 
 	/*
 	 * intensity and eyes type
