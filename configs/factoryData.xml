@@ -93,7 +93,7 @@
     <tasks>
         <task name="locationDetector">
             <class>myagent.featuredetectors.LocationFeatureDetector</class>
-            <ticksperrun>1</ticksperrun>
+            <ticksperrun>5</ticksperrun>
             <associatedmodule>SensoryMemory</associatedmodule>
             <associatedmodule>PerceptualAssociativeMemory</associatedmodule>
             <param name="learnable.baseLevelActivation" type="double">0.0</param>

@@ -161,7 +161,7 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}
 			else if(TaskManager.getCurrentTick()>700 && TaskManager.getCurrentTick()<(10+700)){
-				if(environment.getParam("consistent", true)){
+				if((boolean) environment.getParam("consistent", true)){
 					biG.fillOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 					biG.setColor(Color.GREEN);
 					biG.fillOval(img.getWidth()/6-PrimingEnvironmentPanel.DISC_SIZE/2, img.getHeight()*5/6-PrimingEnvironmentPanel.DISC_SIZE/2, PrimingEnvironmentPanel.DISC_SIZE, PrimingEnvironmentPanel.DISC_SIZE);
@@ -177,7 +177,7 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 				}
 				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}
-			else if(TaskManager.getCurrentTick()>(10+700) && TaskManager.getCurrentTick()<(environment.getParam("blankDuration", 0)+10+700)){
+			else if(TaskManager.getCurrentTick()>(10+700) && TaskManager.getCurrentTick()<(((int)environment.getParam("blankDuration", 0))+10+700)){
 				//blank data
 				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}

@@ -24,7 +24,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
 	@Override
 	public void init(){
-	blankDuration=getParam("blank_duration", 10);
+	blankDuration=(int) getParam("blank_duration", 10);
 
 	blankData.put("dot_color","white");
 	blankData.put("dot_Xpos", 1);
@@ -54,7 +54,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
 			return blankData;
 		}
 		else if(TaskManager.getCurrentTick()>FIXATION_PERIOD && TaskManager.getCurrentTick()<=(PRIME_DURATION+FIXATION_PERIOD)){
-			if(getParam("consistent", true)){
+			if((boolean) getParam("consistent", true)){
 			 return consistentPrimingData;	
 			}
 			else{

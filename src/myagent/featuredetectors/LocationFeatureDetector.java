@@ -13,11 +13,12 @@ import java.util.Map;
 
 import edu.memphis.ccrg.lida.pam.PamLinkable;
 import edu.memphis.ccrg.lida.pam.tasks.BasicDetectionAlgorithm;
+import edu.memphis.ccrg.lida.pam.tasks.DetectionAlgorithm;
 import edu.memphis.ccrg.lida.pam.tasks.MultipleDetectionAlgorithm;
 
 import java.awt.Color;
 
-public class LocationFeatureDetector extends MultipleDetectionAlgorithm{
+public class LocationFeatureDetector extends MultipleDetectionAlgorithm implements DetectionAlgorithm{
 
 	/*
 	 * intensity and eyes type
@@ -29,7 +30,7 @@ public class LocationFeatureDetector extends MultipleDetectionAlgorithm{
     public void init(){
     	super.init();
 		String defaultValue="white";
-		soughtColor =getParam("color", defaultValue);
+		soughtColor =(String) getParam("color", defaultValue);
 	}
 
 	@Override
