@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="lib/jung-jai-samples-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jung-samples-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jung-visualization-2.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/lida-framework-v1.3b.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/lidaFramework-v1.3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

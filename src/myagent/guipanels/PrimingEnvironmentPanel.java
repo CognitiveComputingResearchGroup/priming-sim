@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available 
  * under the terms of the LIDA Software Framework Non-Commercial License v1.0 
  * which accompanies this distribution, and is available at
- * http://ccrg.cs.memphis.edu/assets/papers/2010/LIDA-framework-non-commercial-v1.0.pdf
+ * http://ccrg.cs.memphis.edu/assets/papers/20primingDuration/LIDA-framework-non-commercial-v1.0.pdf
  *******************************************************************************/
 package myagent.guipanels;
 
@@ -111,9 +111,15 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 	private javax.swing.JButton refreshButton;
 	// End of variables declaration//GEN-END:variables
 
+	private int fixationDuration;
+	private int blankDuration;
+	private int primingDuration;
 	@Override
 	public void initPanel(String[] param) {
 		environment = (PrimingEnvironment) agent.getSubmodule(ModuleName.Environment);
+		fixationDuration=environment.FIXATION_PERIOD;
+		blankDuration=environment.getParam("blankDuration", primingDuration);
+		primingDuration=environment.PRIME_DURATION;
 		if (environment != null) {
 			refresh();
 		} else {
@@ -156,11 +162,11 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 			g.clearRect(0,0, getWidth(), getHeight());
 			Graphics biG=img.getGraphics();
 			biG.clearRect(0, 0, img.getWidth(), img.getHeight());
-			if(TaskManager.getCurrentTick()<700){
+			if(TaskManager.getCurrentTick()<=fixationDuration){
 				//blank data
 				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}
-			else if(TaskManager.getCurrentTick()>700 && TaskManager.getCurrentTick()<(10+700)){
+			else if(TaskManager.getCurrentTick()>fixationDuration && TaskManager.getCurrentTick()<=(primingDuration+fixationDuration)){
 				if((boolean) environment.getParam("consistent", true)){
 					biG.fillOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 					biG.setColor(Color.GREEN);
@@ -177,7 +183,7 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 				}
 				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}
-			else if(TaskManager.getCurrentTick()>(10+700) && TaskManager.getCurrentTick()<(((int)environment.getParam("blankDuration", 0))+10+700)){
+			else if(TaskManager.getCurrentTick()>(primingDuration+fixationDuration) && TaskManager.getCurrentTick()<=(blankDuration+primingDuration+fixationDuration)){
 				//blank data
 				biG.drawOval(img.getWidth()/2, img.getHeight()/2, PrimingEnvironmentPanel.DOT_SIZE, PrimingEnvironmentPanel.DOT_SIZE);
 			}

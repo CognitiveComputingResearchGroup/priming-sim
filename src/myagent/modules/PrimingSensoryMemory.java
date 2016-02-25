@@ -32,15 +32,16 @@ public class PrimingSensoryMemory extends SensoryMemoryImpl {
 
     @Override
     public void runSensors() {
-    	sensedData = (HashMap) environment.getState(sensorParam);
 
         for (SensoryMemoryListener listener : sensoryMemoryListeners) {
             listener.receiveSensoryMemoryContent(sensedData);
         }
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Object getSensoryContent(String string, Map<String, Object> params) {
+    	sensedData = (HashMap<String, Object>) environment.getState(sensorParam);
     	return sensedData.get(string);
     }
 

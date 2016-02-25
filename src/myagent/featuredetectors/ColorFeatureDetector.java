@@ -8,9 +8,12 @@
 
 package myagent.featuredetectors;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.memphis.ccrg.lida.framework.shared.Link;
+import edu.memphis.ccrg.lida.pam.PamLink;
 import edu.memphis.ccrg.lida.pam.PamLinkable;
 import edu.memphis.ccrg.lida.pam.tasks.BasicDetectionAlgorithm;
 import edu.memphis.ccrg.lida.pam.tasks.DetectionAlgorithm;
@@ -18,31 +21,46 @@ import edu.memphis.ccrg.lida.pam.tasks.MultipleDetectionAlgorithm;
 
 import java.awt.Color;
 
-public class LocationFeatureDetector extends MultipleDetectionAlgorithm implements DetectionAlgorithm{
+public class ColorFeatureDetector extends MultipleDetectionAlgorithm implements DetectionAlgorithm{
 
 	/*
 	 * intensity and eyes type
 	 */
-    private String soughtColor = "";
+    private int position= 0;
     private Map<String, Object> smParams = new HashMap<String, Object>();
 
     @Override
     public void init(){
     	super.init();
-		String defaultValue="white";
-		soughtColor =(String) getParam("color", defaultValue);
+		position =(int) getParam("position", 0);
 	}
 
 	@Override
 	public void detectLinkables() {
 		
 			String location="";
-			if((boolean)sensoryMemory.getSensoryContent(soughtColor, smParams)){
-				pam.receiveExcitation(pamNodeMap.get(soughtColor), 1.0);
-				location=(int)sensoryMemory.getSensoryContent(soughtColor+"_location", smParams)==1?"topRight":"bottomLeft";
-				
-				pam.receiveExcitation(pamNodeMap.get(location), 1.0);
-				pam.receiveExcitation(pamNodeMap.get(soughtColor+":"+location), 1.0);
+			int red_position,green_position;
+			try{
+				red_position=(int)sensoryMemory.getSensoryContent("red_position", smParams);
+			}catch(NullPointerException npe){
+				red_position=0;
+			}
+			try{
+				green_position=(int)sensoryMemory.getSensoryContent("green_position", smParams);
+			}catch(NullPointerException npe){
+				green_position=0;
+			}
+			if(red_position==position){
+				PamLinkable pl=pamNodeMap.get((position==1?"topRight":"bottomLeft")+"_red");
+				PamLinkable link=pamNodeMap.get("topRight_red:red");
+				if(link!=null){
+					link.setBaseLevelActivation(1.0);
+				}
+				pam.receiveExcitation(pl, 1.0);
+			}
+			else if(green_position==position){
+				PamLinkable pl=pamNodeMap.get((position==1?"topRight":"bottomLeft")+"_green");
+				pam.receiveExcitation(pl, 1.0);
 			}
 				// TODO Auto-generated method stub
 	}
