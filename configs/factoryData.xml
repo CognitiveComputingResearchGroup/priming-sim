@@ -91,7 +91,18 @@
         </link>
     </links>
     <tasks>
-        <task name="colorDetector">
+    	<task name="targetDetector">
+            <class>myagent.featuredetectors.TargetFeatureDetector</class>
+            <ticksperrun>5</ticksperrun>
+            <associatedmodule>SensoryMemory</associatedmodule>
+            <associatedmodule>PerceptualAssociativeMemory</associatedmodule>
+            <param name="learnable.baseLevelActivation" type="double">1.0</param>
+            <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
+            <param name="learnable.baseLevelDecayStrategy" type="string">defaultDecay</param>
+            <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
+            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
+       	 </task>
+	     <task name="colorDetector">
             <class>myagent.featuredetectors.ColorFeatureDetector</class>
             <ticksperrun>5</ticksperrun>
             <associatedmodule>SensoryMemory</associatedmodule>
@@ -101,33 +112,6 @@
             <param name="learnable.baseLevelDecayStrategy" type="string">defaultDecay</param>
             <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
             <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
-        </task>
-        <task name="intensityDetector">
-            <class>myagent.featuredetectors.IntensityFeatureDetector</class>
-            <ticksperrun>5</ticksperrun>
-            <associatedmodule>SensoryMemory</associatedmodule>
-            <associatedmodule>PerceptualAssociativeMemory</associatedmodule>
-            <param name="learnable.baseLevelActivation" type="double">0.0</param>
-            <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
-            <param name="learnable.baseLevelDecayStrategy" type="string">defaultDecay</param>
-            <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
-            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
-            <param name="intensity" type="string">dark</param>
-            <param name="eye" type="string">rightEye</param>
-            <param name="node" type="string">rightDark</param>
-        </task>
-        <task name="colorDetector">
-            <class>myagent.featuredetectors.ColorFeatureDetector</class>
-            <ticksperrun>5</ticksperrun>
-            <associatedmodule>SensoryMemory</associatedmodule>
-            <associatedmodule>PerceptualAssociativeMemory</associatedmodule>
-            <param name="learnable.baseLevelActivation" type="double">0.0</param>
-            <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
-            <param name="learnable.baseLevelDecayStrategy" type="string">defaultDecay</param>
-            <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
-            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
-            <param name="color" type="string">red</param>
-            <param name="node" type="string">rightDark</param>
         </task>
         <task name="BasicAttentionCodelet">
             <class>edu.memphis.ccrg.lida.attentioncodelets.BasicAttentionCodelet</class>
