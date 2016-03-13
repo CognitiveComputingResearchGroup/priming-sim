@@ -52,15 +52,11 @@ public class ColorFeatureDetector extends MultipleDetectionAlgorithm implements 
 			}
 			if(red_position==position){
 				PamLinkable pl=pamNodeMap.get((position==1?"topRight":"bottomLeft")+"_red");
-				PamLinkable link=pamNodeMap.get("topRight_red:red");
-				if(link!=null){
-					link.setBaseLevelActivation(1.0);
-				}
-				pam.receiveExcitation(pl, 0.1);
+				pam.receiveExcitation(pl, 0.02);
 			}
 			else if(green_position==position){
 				PamLinkable pl=pamNodeMap.get((position==1?"topRight":"bottomLeft")+"_green");
-				pam.receiveExcitation(pl, 0.1);
+				pam.receiveExcitation(pl, 0.02);
 			}
 				// TODO Auto-generated method stub
 	}
