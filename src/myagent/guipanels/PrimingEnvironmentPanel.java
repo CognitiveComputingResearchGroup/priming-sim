@@ -117,9 +117,9 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 	@Override
 	public void initPanel(String[] param) {
 		environment = (PrimingEnvironment) agent.getSubmodule(ModuleName.Environment);
-		fixationDuration=environment.FIXATION_PERIOD;
+		fixationDuration=PrimingEnvironment.FIXATION_PERIOD;
 		blankDuration=environment.getParam("blankDuration", primingDuration);
-		primingDuration=environment.PRIME_DURATION;
+		primingDuration=PrimingEnvironment.PRIME_DURATION;
 		if (environment != null) {
 			refresh();
 		} else {

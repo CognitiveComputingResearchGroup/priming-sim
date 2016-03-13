@@ -9,7 +9,7 @@ import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
 public class PrimingEnvironment extends EnvironmentImpl{
 
 
-	public static final int FIXATION_PERIOD=70;
+	public static final int FIXATION_PERIOD=1;
 	public static final int PRIME_DURATION=10;
 
     public static final int ENVIRONMENT_WIDTH = 100;
