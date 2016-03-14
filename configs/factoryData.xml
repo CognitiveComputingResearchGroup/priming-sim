@@ -18,7 +18,7 @@
         <strategy flyweight="true" name="defaultDecay" type="decay">
             <class>edu.memphis.ccrg.lida.framework.strategies.LinearDecayStrategy
             </class>
-            <param name="m" type="double">0.01</param>
+            <param name="m" type="double">0.001</param>
         </strategy>
         <strategy flyweight="true" name="fastDecay" type="decay">
             <class>edu.memphis.ccrg.lida.framework.strategies.LinearDecayStrategy
