@@ -18,7 +18,12 @@
         <strategy flyweight="true" name="defaultDecay" type="decay">
             <class>edu.memphis.ccrg.lida.framework.strategies.LinearDecayStrategy
             </class>
-            <param name="m" type="double">0.001</param>
+            <param name="m" type="double">0.00000000001</param>
+        </strategy>
+        <strategy flyweight="true" name="otherDecay" type="decay">
+            <class>edu.memphis.ccrg.lida.framework.strategies.LinearDecayStrategy
+            </class>
+            <param name="m" type="double">0.01</param>
         </strategy>
         <strategy flyweight="true" name="fastDecay" type="decay">
             <class>edu.memphis.ccrg.lida.framework.strategies.LinearDecayStrategy
@@ -65,12 +70,12 @@
     <nodes>
         <node name="NodeImpl">
             <class>edu.memphis.ccrg.lida.framework.shared.NodeImpl</class>
-            <defaultstrategy>defaultDecay</defaultstrategy>
+            <defaultstrategy>otherDecay</defaultstrategy>
             <defaultstrategy>defaultExcite</defaultstrategy>
         </node>
         <node name="PamNodeImpl">
             <class>edu.memphis.ccrg.lida.pam.PamNodeImpl</class>
-            <defaultstrategy>defaultDecay</defaultstrategy>
+            <defaultstrategy>otherDecay</defaultstrategy>
             <defaultstrategy>defaultExcite</defaultstrategy>
             <param name="learnable.baseLevelActivation" type="double">1.0</param>
             <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
@@ -82,12 +87,12 @@
     <links>
         <link name="LinkImpl">
             <class>edu.memphis.ccrg.lida.framework.shared.LinkImpl</class>
-            <defaultstrategy>defaultDecay</defaultstrategy>
+            <defaultstrategy>otherDecay</defaultstrategy>
             <defaultstrategy>defaultExcite</defaultstrategy>
         </link>
         <link name="PamLinkImpl">
             <class>edu.memphis.ccrg.lida.pam.PamLinkImpl</class>
-            <defaultstrategy>defaultDecay</defaultstrategy>
+            <defaultstrategy>otherDecay</defaultstrategy>
             <defaultstrategy>defaultExcite</defaultstrategy>
             <param name="baseLevelDecayStrategy" type="string">slowDecay</param>
             <param name="baseLevelExciteStrategy" type="string">slowExcite</param>

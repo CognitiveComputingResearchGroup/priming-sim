@@ -24,7 +24,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
 	@Override
 	public void init(){
-	blankDuration=(int) getParam("blankDuration", 10);
+	blankDuration=(int) getParam("blank_duration", 10);
 
 	blankData.put("dot_color","white");
 	blankData.put("dot_Xpos", 1);
