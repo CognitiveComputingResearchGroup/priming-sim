@@ -8,51 +8,58 @@
 
 package myagent.featuredetectors;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.memphis.ccrg.lida.framework.shared.Link;
+import edu.memphis.ccrg.lida.pam.PamLink;
+import edu.memphis.ccrg.lida.pam.PamLinkable;
 import edu.memphis.ccrg.lida.pam.tasks.BasicDetectionAlgorithm;
+import edu.memphis.ccrg.lida.pam.tasks.DetectionAlgorithm;
+import edu.memphis.ccrg.lida.pam.tasks.MultipleDetectionAlgorithm;
+
 import java.awt.Color;
 
-public class ColorFeatureDetector extends BasicDetectionAlgorithm{
+public class ColorFeatureDetector extends MultipleDetectionAlgorithm implements DetectionAlgorithm{
 
 	/*
 	 * intensity and eyes type
 	 */
-    private String soughtColor = "red";
+    private int position= 0;
     private Map<String, Object> smParams = new HashMap<String, Object>();
 
     @Override
-    public void init() {
-       super.init();
-       smParams.put("mode","color");
-       soughtColor = (String) getParam("color", "red");
-    }
+    public void init(){
+    	super.init();
+		position =(int) getParam("position", 0);
+	}
 
-    @Override
-    public double detect() {
-       Color color = (Color) sensoryMemory.getSensoryContent("visual",smParams);
+	@Override
+	public void detectLinkables() {
+		
+			String location="";
+			int red_position,green_position;
+			try{
+				red_position=(int)sensoryMemory.getSensoryContent("red_position", smParams);
+			}catch(NullPointerException npe){
+				red_position=0;
+			}
+			try{
+				green_position=(int)sensoryMemory.getSensoryContent("green_position", smParams);
+			}catch(NullPointerException npe){
+				green_position=0;
+			}
+			if(red_position==position){
+				PamLinkable pl=pamNodeMap.get((position==1?"topRight":"bottomLeft")+"_red");
+				pam.receiveExcitation(pl, 0.02);
+			}
+			else if(green_position==position){
+				PamLinkable pl=pamNodeMap.get((position==1?"topRight":"bottomLeft")+"_green");
+				pam.receiveExcitation(pl, 0.02);
+			}
+				// TODO Auto-generated method stub
+	}
 
-        if ("red".equalsIgnoreCase(soughtColor))
-        {
-            if (color == Color.RED )
-            {
-                return 1.0;
-            }else{
-                return 0.0;
-            }
-        }
-
-        if ("white".equalsIgnoreCase(soughtColor))
-        {
-            if (color == Color.WHITE )
-            {
-                return 1.0;
-            }else{
-                return 0.0;
-            }
-        }
-
-       return 0.0;
-    }
+    
 }
