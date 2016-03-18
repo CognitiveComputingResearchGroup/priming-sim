@@ -3,6 +3,8 @@ package myagent.modules;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.vecmath.Point2d;
+
 import edu.memphis.ccrg.lida.environment.EnvironmentImpl;
 import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
 
@@ -20,7 +22,18 @@ public class PrimingEnvironment extends EnvironmentImpl{
     private Map<String, Object> consistentPrimingData= new HashMap<String, Object>();
     private Map<String, Object> inconsistentPrimingData= new HashMap<String, Object>();
     
+	public Point2d p=new Point2d(PrimingEnvironment.ENVIRONMENT_HEIGHT/2,PrimingEnvironment.ENVIRONMENT_WIDTH/2);
     private int blankDuration=0;
+    
+    public void motor1(int forceMag,int forceDirection){
+    	p.x=
+    	p.y=
+    }
+
+    public void motor2(int forceMag,int forceDirection){
+    	p.x=
+    	p.y=
+    }
 
 	@Override
 	public void init(){
@@ -72,7 +85,10 @@ public class PrimingEnvironment extends EnvironmentImpl{
 	@Override
 	public void processAction(Object arg0) {
 		// TODO Auto-generated method stub
-		
+		motor1()
+		motor2()
+//		p.x=
+//		p.y=
 	}
 
 	@Override

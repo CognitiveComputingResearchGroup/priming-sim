@@ -11,11 +11,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JPanel;
+import javax.vecmath.Point2d;
 
 import myagent.modules.PrimingEnvironment;
 import edu.memphis.ccrg.lida.framework.ModuleName;
@@ -194,6 +196,9 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 				biG.setColor(Color.RED);
 				biG.drawOval(img.getWidth()*5/6-PrimingEnvironmentPanel.ANNULI_SIZE/2, img.getHeight()/6-PrimingEnvironmentPanel.ANNULI_SIZE/2, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
 			}
+			biG.setColor(Color.YELLOW);
+			Point2d p=environment.p;
+			biG.drawRect((int)p.x-PrimingEnvironmentPanel.ANNULI_SIZE/2,(int) p.y-PrimingEnvironmentPanel.ANNULI_SIZE/2, PrimingEnvironmentPanel.ANNULI_SIZE, PrimingEnvironmentPanel.ANNULI_SIZE);
 			Image scaledImage = img.getScaledInstance((int)(img.getWidth()*scalingFactor), (int)(img.getHeight()*scalingFactor), Image.SCALE_SMOOTH);
 			int xCentered = (getWidth() - scaledImage.getWidth(this)) / 2;
 			int yCentered = (getHeight()- scaledImage.getHeight(this)) / 2;
