@@ -24,7 +24,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
     
 	public Point2d p=new Point2d(PrimingEnvironment.ENVIRONMENT_HEIGHT/2,PrimingEnvironment.ENVIRONMENT_WIDTH/2);
     private int blankDuration=0;
-    
+   
+    /*
     public void motor1(int forceMag,int forceDirection){
     	p.x=
     	p.y=
@@ -34,6 +35,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
     	p.x=
     	p.y=
     }
+    */
 
 	@Override
 	public void init(){
@@ -85,8 +87,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
 	@Override
 	public void processAction(Object arg0) {
 		// TODO Auto-generated method stub
-		motor1()
-		motor2()
+		//motor1()
+		//motor2()
 //		p.x=
 //		p.y=
 	}

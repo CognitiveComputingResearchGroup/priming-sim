@@ -41,12 +41,12 @@ public class ColorFeatureDetector extends MultipleDetectionAlgorithm implements 
 			String location="";
 			int red_position,green_position;
 			try{
-				red_position=(int)sensoryMemory.getSensoryContent("red_position", smParams);
+				red_position=(Integer)sensoryMemory.getSensoryContent("red_position", smParams);
 			}catch(NullPointerException npe){
 				red_position=0;
 			}
 			try{
-				green_position=(int)sensoryMemory.getSensoryContent("green_position", smParams);
+				green_position=(Integer)sensoryMemory.getSensoryContent("green_position", smParams);
 			}catch(NullPointerException npe){
 				green_position=0;
 			}
