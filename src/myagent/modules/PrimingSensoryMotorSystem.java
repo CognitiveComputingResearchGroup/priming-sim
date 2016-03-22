@@ -7,8 +7,6 @@
  *******************************************************************************/
 package myagent.modules;
 
-import myagent.SMS.MPT.MPT;
-import myagent.SMS.EE.EE;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +22,7 @@ import edu.memphis.ccrg.lida.framework.tasks.FrameworkTaskImpl;
 import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
 import edu.memphis.ccrg.lida.sensorymotormemory.BasicSensoryMotorMemory;
 import edu.memphis.ccrg.lida.sensorymotormemory.SensoryMotorMemoryListener;
-import myagent.SMS.MPT.Grip.GripMPT;
-import myagent.modules.WebotsEnvironment;
-
-import myagent.SMS.EE.Grip.GripEE;
+import myagent.modules.PrimingEnvironment;
 
 public class PrimingSensoryMotorSystem extends BasicSensoryMotorMemory {
 
@@ -38,25 +33,8 @@ public class PrimingSensoryMotorSystem extends BasicSensoryMotorMemory {
     private Map<Number, Object> actionAlgorithmMap = new HashMap<Number, Object>();
     private Environment environment;
     private Map<String, Object> sensedData = new HashMap<String, Object>();
-    private static final double DEFAULT_WHEEL_SPEED = 50.0;
-    private double wheelSpeed;
-    private static final double TURN_ANGLE_SCALE_UPPER = 1.0;
-    private double scaleUpper;
-    private static final double TURN_ANGLE_SCALE_LOWER = 0.2;
-    private double scaleLower;
-    private static final double FORWARD_NOISE = 0.1;
-    private double forwardNoise;
-    private static final double MAX_SPEED = 1024;
-    private double maxSpeed;
-    private static final boolean DORSAL_STREAM = true;
-    private boolean dorsalStream;
-    private static final double SMALLEST_NUM = 0.0001;
-
+  
     private boolean actionInProgress = false;
-
-    private MPT gripMpt;
-
-    private EE gripEE;
 
     /**
      * Default constructor
@@ -66,7 +44,17 @@ public class PrimingSensoryMotorSystem extends BasicSensoryMotorMemory {
 
     @Override
     public void init() {
+        processActionTaskTicks = (Integer) getParam("smm.processActionTaskTicks", DEFAULT_BACKGROUND_TASK_TICKS);
 
+        /* Init MPTs as below
+        gripMpt = new GripMPT();
+        gripMpt.init();
+        gripMpt.receiveTS(taskSpawner);
+
+        gripEE = new GripEE();
+        gripEE.init();
+        gripEE.receiveTS(taskSpawner);
+        */
    }
 
 
