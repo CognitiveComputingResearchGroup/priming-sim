@@ -20,11 +20,19 @@ import edu.memphis.ccrg.lida.framework.FrameworkModule;
 import edu.memphis.ccrg.lida.framework.ModuleListener;
 import edu.memphis.ccrg.lida.framework.tasks.FrameworkTaskImpl;
 import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
-import edu.memphis.ccrg.lida.sensorymotormemory.BasicSensoryMotorMemory;
+//import edu.memphis.ccrg.lida.sensorymotormemory.BasicSensoryMotorMemory;
 import edu.memphis.ccrg.lida.sensorymotormemory.SensoryMotorMemoryListener;
 import myagent.modules.PrimingEnvironment;
 
-public class PrimingSensoryMotorSystem extends BasicSensoryMotorMemory {
+import myagent.SMS.SensoryMotorSystem;
+import myagent.SMS.MPT.MPT;
+
+import myagent.MPT.pointing.PointingBottomLeftMPT;
+import myagent.MPT.pointing.PointingTopRightMPT;
+
+
+
+public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
 
     private static final Logger logger = Logger.getLogger(PrimingSensoryMotorSystem.class.getCanonicalName());
     private static final int DEFAULT_BACKGROUND_TASK_TICKS = 1;
@@ -35,6 +43,8 @@ public class PrimingSensoryMotorSystem extends BasicSensoryMotorMemory {
     private Map<String, Object> sensedData = new HashMap<String, Object>();
   
     private boolean actionInProgress = false;
+    
+    private MPT pointingMpt_TopRight, pointingMpt_BottomLeft;
 
     /**
      * Default constructor
@@ -45,33 +55,32 @@ public class PrimingSensoryMotorSystem extends BasicSensoryMotorMemory {
     @Override
     public void init() {
         processActionTaskTicks = (Integer) getParam("smm.processActionTaskTicks", DEFAULT_BACKGROUND_TASK_TICKS);
-
-        /* Init MPTs as below
-        gripMpt = new GripMPT();
-        gripMpt.init();
-        gripMpt.receiveTS(taskSpawner);
-        */
         
         //Load motor plan tempaltes (MPTs), maybe from disk (database) to memory, 
         //for choosing current MPT
-   }
-
-
+        loadMPT();
+        
+        actionInProgress = false;
+               
+    }
+    
     @Override
-    public void addListener(ModuleListener listener) {
-
+    public void loadMPT() {
+        
+        pointingMpt_TopRight = new PointingTopRightMPT();
+        pointingMpt_TopRight.init();
+        pointingMpt_TopRight.receiveTS(taskSpawner);
+        
+        pointingMpt_BottomLeft = new PointingBottomLeftMPT();
+        pointingMpt_BottomLeft.init();
+        pointingMpt_BottomLeft.receiveTS(taskSpawner);
     }
 
     @Override
-    public void addSensoryMotorMemoryListener(SensoryMotorMemoryListener l) {
-
+    public MPT selectMPT(Object alg) {
+        return pointingMpt_TopRight;
     }
-
-    @Override
-    public void setAssociatedModule(FrameworkModule module, String moduleUsage) {
-
-    }
-
+    
     /**
      * Adds an Algorithm to this {@link SensoryMotorMemory}
      * @param actionId Id of {@link Action} which is implemented by the algorithm
@@ -79,13 +88,41 @@ public class PrimingSensoryMotorSystem extends BasicSensoryMotorMemory {
      */
     @Override
     public void addActionAlgorithm(Number actionId, Object action) {
-
+        System.out.println("::addActionAlgorithm:: actionId is" + actionId + " and action is " + action);
+        actionAlgorithmMap.put(actionId, action);
     }
-
+    
     @Override
     public synchronized void receiveAction(Action action) {
 
+        if (actionInProgress){
+        // To start the certain grip MPT once only, because the FSMs inside
+        // the MPT are kind of tasks automatically running continuously
+            //logger.log(Level.INFO, "No need to execute now.");
+            return;
+        }
+        
+        if (action != null) {
+            logger.log(Level.INFO, "receiveAction starts...");
+            
+            //To specify the gripMpt to a MP
+            //gripMpt.specify();
+
+            // To run the specifid gripMpt (a MP)
+            //gripMpt.onlineControl();
+
+            //To run the gripEE
+            //gripEE.estimation();
+            
+            ProcessActionTask t = new ProcessActionTask(action);
+            taskSpawner.addTask(t);
+            actionInProgress = true;
+        } else {
+            logger.log(Level.WARNING, "Received null action", TaskManager.getCurrentTick());
+        }
+
     }
+
 
     private class ProcessActionTask extends FrameworkTaskImpl {
 
