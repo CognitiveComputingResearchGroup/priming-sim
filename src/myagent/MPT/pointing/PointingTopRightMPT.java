@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import myagent.MPT.pointing.FSM.PointingTopRightFSM;
+import myagent.modules.PrimingSensoryMotorSystem;
 
 /**
  *
@@ -32,6 +33,11 @@ public class PointingTopRightMPT extends pointingMPT{
         logger.log(Level.INFO, "pointing to the target (top right)...");
         
         super.onlineControl();
+    }
+
+    @Override
+    public void specify() {
+        theFSM.specify(PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF);
     }
 
 }

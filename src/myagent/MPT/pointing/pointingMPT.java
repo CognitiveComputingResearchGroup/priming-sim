@@ -36,11 +36,6 @@ public abstract class pointingMPT extends SubsumptionMPTImpl{
     }
 
     @Override
-    public void specify() {
-        theFSM.specify(PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF);
-    }
-
-    @Override
     public void update() {
         theFSM.update(PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF);
     }

@@ -51,7 +51,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     //default moving force (N)
     public static final double MOVING_FORCE_DEF = 1.0;
 
-    //default direction (90 degrees)
+    //default direction in radians (45 degrees)
     public static final double MOVING_DIRECTION_DEF = Math.PI/4;
     
     private MPT selectedMPT;
