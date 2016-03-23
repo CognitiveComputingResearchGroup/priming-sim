@@ -114,6 +114,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         double xF, yF, xS, yS;
         
+        double t = 1.0;//the time duration (sec)
+        
         xF = Math.cos(forceDirection)*forceMag;
         yF = Math.sin(forceDirection)*forceMag;
         
@@ -122,12 +124,15 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         //The orginal point of the canvas is on the top left
         //Thus, for moving to top right, x dim increases while y decreases
-    	p.x= p.x + xS;
-    	p.y= p.y - yS;
+    	p.x= p.x + xS * t;
+    	p.y= p.y - yS * t;
     }
 
     private void lowerMotorControl(double forceMag, double forceDirection){
+        
     	double xF, yF, xS, yS;
+        
+        double t = 1.0;//the time duration (sec)
         
         xF = Math.cos(forceDirection)*forceMag;
         yF = Math.sin(forceDirection)*forceMag;
@@ -137,8 +142,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         //The orginal point of the canvas is on the top left
         //Thus, for moving to top right, x dim decreases while y increases
-    	p.x= p.x - xS;
-    	p.y= p.y + yS;
+    	p.x= p.x - xS * t;
+    	p.y= p.y + yS * t;
    
     }
     
