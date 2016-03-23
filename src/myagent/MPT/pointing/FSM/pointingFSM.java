@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import myagent.SMS.MPT.FSMImpl;
 import myagent.SMS.MPT.Grip.GrabFSM;
 
+import myagent.modules.PrimingSensoryMotorSystem;
+
 /**
  *
  * @author Daqi
@@ -26,12 +28,8 @@ public abstract class pointingFSM extends FSMImpl{
 
     private static final int STATE_NIL = 0;
     private static final int STATE_MOVE = 1;
-
-    //default moving force (N)
-    protected static final double MOVING_FORCE_DEF = 1.0;
-
-    //default direction (90 degrees)
-    protected static final double MOVING_DIRECTION_DEF = Math.PI/4;
+    
+    protected double moveing_force, moving_direction;
     
     public pointingFSM(int ticksPerRun) {
         super(ticksPerRun);
@@ -41,12 +39,17 @@ public abstract class pointingFSM extends FSMImpl{
     public void init() {
 
         state = STATE_NIL;
+        
+        moveing_force = 0.0;
+        
+        moving_direction = 0.0;
 
         commands.put("MotorName", null);
-        setMotorName();
-        
-        commands.put("Force", null);
+        //Fixed force
+        commands.put("Force", PrimingSensoryMotorSystem.MOVING_FORCE_DEF);
         commands.put("Direction", null);
+        
+        setMotorName();
 
     }
     
@@ -58,11 +61,25 @@ public abstract class pointingFSM extends FSMImpl{
     }
     
     @Override
+    public void specify(Object o){
+        //this Object o supose to pass the direction value to this FSM
+        moving_direction = (Double) o;
+
+    }
+    
+    @Override
+    public void update(Object o){
+        //this Object o supose to pass the direction value to this FSM
+        moving_direction = (Double) o;
+
+    }
+    
+    @Override
     public void execute() {
         switch (state){
             case STATE_NIL:
 
-                commands.put("Force", null);
+                //commands.put("Force", null);
                 commands.put("Direction", null);
                 
                 state = STATE_MOVE;
@@ -70,10 +87,10 @@ public abstract class pointingFSM extends FSMImpl{
                 
             case STATE_MOVE:
                 
-                commands.put("Force", MOVING_FORCE_DEF);
+                //commands.put("Force", moveing_force);
                 //TODO:Do we need to specify a specific direction degree here,
                 //maybe driven by the sensory data passed from sensory memory?
-                commands.put("Direction", MOVING_DIRECTION_DEF);
+                commands.put("Direction", moving_direction);
                 
                 state = STATE_MOVE;
                 break;

@@ -44,8 +44,19 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
   
     private boolean actionInProgress = false;
     
-    private MPT pointingMpt_TopRight, pointingMpt_BottomLeft;
+    private Map<String, Object> algoMPTMap = new HashMap<String, Object>();
+    
+    //The name of these algorithms are defined in the configure file;
+    //The consistency is necessary
+    public static final String topRightMPT = "algorithm.topRight";
+    public static final String bottomLeftMPT = "algorithm.bottomLeft";
+    
+    //default moving force (N)
+    public static final double MOVING_FORCE_DEF = 1.0;
 
+    //default direction (90 degrees)
+    public static final double MOVING_DIRECTION_DEF = Math.PI/4;
+    
     /**
      * Default constructor
      */
@@ -67,18 +78,27 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     @Override
     public void loadMPT() {
         
-        pointingMpt_TopRight = new PointingTopRightMPT();
-        pointingMpt_TopRight.init();
-        pointingMpt_TopRight.receiveTS(taskSpawner);
+        MPT m;
         
-        pointingMpt_BottomLeft = new PointingBottomLeftMPT();
-        pointingMpt_BottomLeft.init();
-        pointingMpt_BottomLeft.receiveTS(taskSpawner);
+        m = new PointingTopRightMPT();
+        m.init();
+        m.receiveTS(taskSpawner);
+        
+        algoMPTMap.put(topRightMPT, m);
+        
+        m = new PointingBottomLeftMPT();
+        m.init();
+        m.receiveTS(taskSpawner);
+        
+        algoMPTMap.put(bottomLeftMPT, m);
+        
     }
 
     @Override
     public MPT selectMPT(Object alg) {
-        return pointingMpt_TopRight;
+        
+        return (MPT)algoMPTMap.get((String)alg);
+
     }
     
     /**
@@ -105,15 +125,6 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
         if (action != null) {
             logger.log(Level.INFO, "receiveAction starts...");
             
-            //To specify the gripMpt to a MP
-            //gripMpt.specify();
-
-            // To run the specifid gripMpt (a MP)
-            //gripMpt.onlineControl();
-
-            //To run the gripEE
-            //gripEE.estimation();
-            
             ProcessActionTask t = new ProcessActionTask(action);
             taskSpawner.addTask(t);
             actionInProgress = true;
@@ -136,7 +147,22 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
 
         @Override
         protected void runThisFrameworkTask() {
+            System.out.println("::action ID is " + action.getId() + " and action lable is " + action.getLabel());
+            
+            Object selectedAlg = actionAlgorithmMap.get((Number)action.getId());
+            
+            //MPT selection
+            MPT selectedMPT = selectMPT(selectedAlg);
+           
+            //MPT specificaiton (a fake one; currently the default value of direction is passed)
+            selectedMPT.specify();
+            
+            //online control
+            selectedMPT.onlineControl();
 
+            //send out motor commands
+            sendActuatorCommand(generateActuatorCommand(alg));
+            
         }
     }
 
@@ -152,6 +178,9 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
 
     @Override
     public void receiveSensoryMemoryContent(Object content) {
+                    
+            //update
+            //TODO
 
     }
 }
