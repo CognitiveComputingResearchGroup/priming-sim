@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import myagent.MPT.pointing.FSM.PointingBottomLeftFSM;
-import myagent.modules.PrimingSensoryMotorSystem;
 
 /**
  *
@@ -31,9 +30,5 @@ public class PointingBottomLeftMPT extends pointingMPT{
         
         super.onlineControl();
     }
-    
-    @Override
-    public void specify() {
-        theFSM.specify(PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF + Math.PI);
-    }
+
 }
