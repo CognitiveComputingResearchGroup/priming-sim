@@ -22,8 +22,14 @@ public class PrimingEnvironment extends EnvironmentImpl{
     private Map<String, Object> consistentPrimingData= new HashMap<String, Object>();
     private Map<String, Object> inconsistentPrimingData= new HashMap<String, Object>();
     
-	public Point2d p=new Point2d(PrimingEnvironment.ENVIRONMENT_HEIGHT/2,PrimingEnvironment.ENVIRONMENT_WIDTH/2);
+    public Point2d p=new Point2d(PrimingEnvironment.ENVIRONMENT_HEIGHT/2,PrimingEnvironment.ENVIRONMENT_WIDTH/2);
     private int blankDuration=0;
+    
+    //Define two motors to conrol a simulated "finger" to execute pointing action
+    //-- upper motor pull the finger moving to up, here it is top right area
+    //-- lower motor pull the finger moving to down, here it is bottom left area
+    public static final String UPPER_MOTOR_NAME = "upper_motor";
+    public static final String LOWER_MOTOR_NAME = "lower_motor";
    
     /*
     public void motor1(int forceMag,int forceDirection){

@@ -50,11 +50,10 @@ public class PrimingSensoryMotorSystem extends BasicSensoryMotorMemory {
         gripMpt = new GripMPT();
         gripMpt.init();
         gripMpt.receiveTS(taskSpawner);
-
-        gripEE = new GripEE();
-        gripEE.init();
-        gripEE.receiveTS(taskSpawner);
         */
+        
+        //Load motor plan tempaltes (MPTs), maybe from disk (database) to memory, 
+        //for choosing current MPT
    }
 
 
