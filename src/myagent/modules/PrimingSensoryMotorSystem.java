@@ -37,10 +37,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     private static final Logger logger = Logger.getLogger(PrimingSensoryMotorSystem.class.getCanonicalName());
     private static final int DEFAULT_BACKGROUND_TASK_TICKS = 1;
     private int processActionTaskTicks;
-    private List<SensoryMotorMemoryListener> listeners = new ArrayList<SensoryMotorMemoryListener>();
     private Map<Number, Object> actionAlgorithmMap = new HashMap<Number, Object>();
-    private Environment environment;
-    private Map<String, Object> sensedData = new HashMap<String, Object>();
   
     private boolean actionInProgress = false;
     
@@ -56,6 +53,8 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
 
     //default direction (90 degrees)
     public static final double MOVING_DIRECTION_DEF = Math.PI/4;
+    
+    private MPT selectedMPT;
     
     /**
      * Default constructor
@@ -108,7 +107,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
      */
     @Override
     public void addActionAlgorithm(Number actionId, Object action) {
-        System.out.println("::addActionAlgorithm:: actionId is" + actionId + " and action is " + action);
+        //System.out.println("::addActionAlgorithm:: actionId is" + actionId + " and action is " + action);
         actionAlgorithmMap.put(actionId, action);
     }
     
@@ -125,8 +124,20 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
         if (action != null) {
             logger.log(Level.INFO, "receiveAction starts...");
             
-            ProcessActionTask t = new ProcessActionTask(action);
-            taskSpawner.addTask(t);
+            Object selectedAlg = actionAlgorithmMap.get((Number)action.getId());
+            
+            //MPT selection
+            selectedMPT = selectMPT(selectedAlg);
+           
+            //MPT specificaiton (a fake one; currently the default value of direction is passed)
+            selectedMPT.specify();
+            
+            //online control
+            selectedMPT.onlineControl();
+            
+            OutputMPTCommands t1 = new OutputMPTCommands();
+            taskSpawner.addTask(t1);
+                        
             actionInProgress = true;
         } else {
             logger.log(Level.WARNING, "Received null action", TaskManager.getCurrentTick());
@@ -134,53 +145,31 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
 
     }
 
-
-    private class ProcessActionTask extends FrameworkTaskImpl {
-
-        private Action action;
-        Object alg = null;
-
-        public ProcessActionTask(Action a) {
-            super(processActionTaskTicks);
-            action = a;
-        }
+    private class OutputMPTCommands extends FrameworkTaskImpl {
 
         @Override
         protected void runThisFrameworkTask() {
-            System.out.println("::action ID is " + action.getId() + " and action lable is " + action.getLabel());
+        
+            Object cmd = selectedMPT.outputCommands();
+            //System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
             
-            Object selectedAlg = actionAlgorithmMap.get((Number)action.getId());
-            
-            //MPT selection
-            MPT selectedMPT = selectMPT(selectedAlg);
-           
-            //MPT specificaiton (a fake one; currently the default value of direction is passed)
-            selectedMPT.specify();
-            
-            //online control
-            selectedMPT.onlineControl();
+            sendActuatorCommand(cmd);
 
-            //send out motor commands
-            sendActuatorCommand(generateActuatorCommand(alg));
-            
         }
     }
-
-    private Map<String, Object> generateActuatorCommand(Object alg) {
-		return sensedData;
-
-    }
-
-    @Override
-    public void sendActuatorCommand(Object command) {
-
-    }
+    
 
     @Override
     public void receiveSensoryMemoryContent(Object content) {
                     
-            //update
-            //TODO
+        //recieve data
+        //no impl
+        
+        //update
+        //selectedMPT.update();
+        
+        //TODO:
+        //priming: cue a new MPT to execute
 
     }
 }

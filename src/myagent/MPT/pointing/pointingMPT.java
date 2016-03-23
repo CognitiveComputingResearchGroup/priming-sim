@@ -50,7 +50,7 @@ public abstract class pointingMPT extends SubsumptionMPTImpl{
        
         taskSpawner.addTask(theFSM);
         
-        commands = (Map<String, Object>) theFSM.outputCommands();
+        //commands = (Map<String, Object>) theFSM.outputCommands();
     }
     
     @Override

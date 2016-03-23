@@ -91,7 +91,9 @@ public class PrimingEnvironment extends EnvironmentImpl{
 	}
 
 	@Override
-	public void processAction(Object arg0) {
+	public void processAction(Object cmd) {
+            
+            System.out.println("primingEnv::the command is: " + cmd);
 		// TODO Auto-generated method stub
 		//motor1()
 		//motor2()
