@@ -136,19 +136,6 @@
             <param name="refractoryPeriod" type="int">50</param>
             <param name="coalitionDecayStrategy" type="string">defaultDecay</param>
         </task>
-        <task name="IntensitySBCodelet">
-            <class>myagent.Codelets.IntensityStructureBuildingCodelet</class>
-            <ticksperrun>20</ticksperrun>
-            <associatedmodule function="TO_READ_FROM">PerceptualBuffer</associatedmodule>
-            <associatedmodule function="TO_WRITE_TO">CurrentSituationalModel</associatedmodule>
-            <param name="learnable.baseLevelActivation" type="double">1.0</param>
-            <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
-            <param name="learnable.baseLevelDecayStrategy" type="string">defaultDecay</param>
-            <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
-            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
-            <param name="low_nodes" type="string">leftDark,rightDark</param>
-            <param name="high_nodes" type="string">bothFar</param>
-        </task>
         <task name="SensoryMemoryBackgroundTask">
             <class>edu.memphis.ccrg.lida.sensorymemory.SensoryMemoryBackgroundTask
             </class>

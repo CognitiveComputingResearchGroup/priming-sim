@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import myagent.SMS.MPT.FSMImpl;
-import myagent.SMS.MPT.Grip.GrabFSM;
 
 import myagent.modules.PrimingSensoryMotorSystem;
 
@@ -47,7 +46,7 @@ public abstract class pointingFSM extends FSMImpl{
         commands.put("MotorName", null);
         //Fixed force
         commands.put("Force", PrimingSensoryMotorSystem.MOVING_FORCE_DEF);
-        commands.put("Direction", 0);
+        commands.put("Direction", 0.0);
         
         setMotorName();
 
@@ -80,7 +79,7 @@ public abstract class pointingFSM extends FSMImpl{
             case STATE_NIL:
 
                 //commands.put("Force", null);
-                commands.put("Direction", 0);
+                commands.put("Direction", 0.0);
                 
                 state = STATE_MOVE;
                 break;
