@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import myagent.SMS.MPT.FSMImpl;
+
+import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.FSMImpl;
 
 import myagent.modules.PrimingSensoryMotorSystem;
 

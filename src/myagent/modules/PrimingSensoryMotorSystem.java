@@ -24,8 +24,8 @@ import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
 import edu.memphis.ccrg.lida.sensorymotormemory.SensoryMotorMemoryListener;
 import myagent.modules.PrimingEnvironment;
 
-import myagent.SMS.SensoryMotorSystem;
-import myagent.SMS.MPT.MPT;
+import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.SensoryMotorSystem;
+import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.MPT;
 
 import myagent.MPT.pointing.PointingBottomLeftMPT;
 import myagent.MPT.pointing.PointingTopRightMPT;

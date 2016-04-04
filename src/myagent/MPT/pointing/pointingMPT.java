@@ -6,8 +6,9 @@
 package myagent.MPT.pointing;
 
 import java.util.Map;
-import myagent.SMS.MPT.FSM;
-import myagent.SMS.MPT.SubsumptionMPTImpl;
+
+import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.FSM;
+import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.SubsumptionMPTImpl;
 import myagent.modules.PrimingSensoryMotorSystem;
 
 /**
