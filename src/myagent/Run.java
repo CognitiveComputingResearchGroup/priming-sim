@@ -3,7 +3,7 @@ package myagent;
 import edu.memphis.ccrg.lida.framework.initialization.AgentStarter;
 
 /**
- *
+ * This was created by Daqi.
  * @author Daqi
  */
 public class Run {
