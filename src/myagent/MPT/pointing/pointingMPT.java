@@ -9,6 +9,7 @@ import java.util.Map;
 
 import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.FSM;
 import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.SubsumptionMPTImpl;
+import java.util.logging.Level;
 import myagent.modules.PrimingSensoryMotorSystem;
 
 /**
@@ -18,6 +19,8 @@ import myagent.modules.PrimingSensoryMotorSystem;
 public abstract class pointingMPT extends SubsumptionMPTImpl{
    
     protected FSM theFSM;
+    
+    //private double FOO;
 
     @Override
     public void init() {
@@ -26,6 +29,8 @@ public abstract class pointingMPT extends SubsumptionMPTImpl{
         //PointingTopRightFSM.init();
         specifyTheFSM();
         theFSM.init();
+        
+        //FOO = PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF;
         
     }
     
@@ -43,7 +48,11 @@ public abstract class pointingMPT extends SubsumptionMPTImpl{
     
     @Override
     public void update() {
+        //logger.log(Level.INFO, "updating MC variables ...");
+        //FOO = FOO + 0.01;
+                
         theFSM.update(PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF);
+        //theFSM.update(FOO);
     }
 
     @Override

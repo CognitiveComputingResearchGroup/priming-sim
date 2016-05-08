@@ -56,6 +56,8 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     
     private MPT selectedMPT;
     
+    private MPT currentMP; //Conceptually 'currentMP' is a MP while it is implemented by a MPT
+    
     /**
      * Default constructor
      */
@@ -129,11 +131,13 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             //MPT selection
             selectedMPT = selectMPT(selectedAlg);
            
+            currentMP = selectedMPT;
+            
             //MPT specificaiton (a fake one; currently the default value of direction is passed)
-            selectedMPT.specify();
+            currentMP.specify();
             
             //online control
-            selectedMPT.onlineControl();
+            currentMP.onlineControl();
             
             OutputMPTCommands t1 = new OutputMPTCommands();
             taskSpawner.addTask(t1);
@@ -150,7 +154,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
         @Override
         protected void runThisFrameworkTask() {
         
-            Object cmd = selectedMPT.outputCommands();
+            Object cmd = currentMP.outputCommands();
             //System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
             
             sendActuatorCommand(cmd);
@@ -166,7 +170,10 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
         //no impl
         
         //update
-        //selectedMPT.update();
+        if (currentMP != null)
+        {
+            currentMP.update();
+        }
         
         //TODO:
         //priming: cue a new MPT to execute

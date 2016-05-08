@@ -116,6 +116,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         double t = 1.0;//the time duration (sec)
         
+        //System.out.println("forceDirection is " + forceDirection);
+        
         xF = Math.cos(forceDirection)*forceMag;
         yF = Math.sin(forceDirection)*forceMag;
         
