@@ -29,6 +29,7 @@ import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.MPT;
 
 import myagent.MPT.pointing.PointingBottomLeftMPT;
 import myagent.MPT.pointing.PointingTopRightMPT;
+import myagent.MPT.pointing.pointingMPT;
 
 
 
@@ -60,18 +61,18 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     public static final Integer pos_TopRight = 1;
     public static final Integer pos_BottomLeft = 3;
     
+    private Map <String, Object> currentMPs = new HashMap <String, Object>();
+       
     //default moving force (N)
     public static final double MOVING_FORCE_DEF = 1.0;
 
     //default direction in radians (45 degrees)
     public static final double MOVING_DIRECTION_DEF = Math.PI/4;
     
-    private MPT selectedMPT;
+    public static final double TENSION_ADDED_PERRUN = 5.0;
     
-    private MPT currentMP; //Conceptually 'currentMP' is a MP while it is implemented by a MPT
+    public static final double TENSION_REMOVED_PERRUN = 5.0;
     
-    private Map <String, Object> currentMPs = new HashMap <String, Object>();
-
     public static final String target_color = "red";
     
     /**
@@ -161,16 +162,42 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             
             Object selectedAlg = actionAlgorithmMap.get((Number)action.getId());
             
-            //MPT selection
-            selectedMPT = selectMPT(selectedAlg);
-           
-            currentMP = selectedMPT;
+            String MPTName = algoMPTMap.get(selectedAlg);
             
-            //MPT specificaiton (a fake one; currently the default value of direction is passed)
-            currentMP.specify();
+            if (MPTName == null){
+                logger.log(Level.WARNING, "The selected algorithm does not have relevant motor plan template", TaskManager.getCurrentTick());
+                return;
+            }
+            
+            //If MPTName != null
+            //Then
+            
+             pointingMPT selectedMP;
+                     
+            if (currentMPs.containsKey(MPTName)){
+                selectedMP = (pointingMPT) currentMPs.get(MPTName);
+                
+            } else{
+                //MPT selection
+                MPT selectedMPT = (MPT)MPTInstanceMap.get(MPTName);
+
+                selectedMP = (pointingMPT)selectedMPT;
+
+                //MPT specificaiton (a fake one; currently the default value of direction is passed)
+                selectedMP.specify();
+                
+                currentMPs.put(MPTName, selectedMP);
+            }
+                            
+            //control the selected MP to have current tension to be kept 
+            selectedMP.setBehavioralSelected(true);
             
             //online control
-            currentMP.onlineControl();
+            //currentMP.onlineControl();
+            
+            for (Object theMP: currentMPs.values()){
+                ((MPT)theMP).onlineControl();
+            }
             
             OutputMPTCommands t1 = new OutputMPTCommands();
             taskSpawner.addTask(t1);
@@ -187,11 +214,19 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
         @Override
         protected void runThisFrameworkTask() {
         
+            /*
             Object cmd = currentMP.outputCommands();
             //System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
             
             sendActuatorCommand(cmd);
+            */
+            
+            for (Object theMP: currentMPs.values()){
+                Object cmd = ((MPT)theMP).outputCommands();
+                System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
 
+                sendActuatorCommand(cmd);
+            }
         }
     }
     
@@ -206,9 +241,16 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             return;//ignore the empty states
         
         //update
+        
+        /*
         if (currentMP != null)
         {
             currentMP.update();
+        }
+        */
+        
+        for (Object theMP: currentMPs.values()){
+            ((MPT)theMP).update();
         }
         
         //priming: cue a new MPT to execute
@@ -242,24 +284,22 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             
             if (actionInProgress == false){//Before the start of action execution
                 //Create new MP in the current MPs pool
-                priming(MPTName);
+                primingMPT(MPTName);
                 
             } else {//During action execution
                 //Support current existing MP
+                //--> No impl since the priming effect only occurs before the start
+                //of action execution
                 
             }
         }
-        
-
-
     }
-    
     
     /*
     Create new motor plan (MP) driven by the arrival of relevant sensory data
     when the action execution is not started yet
     */
-    private void priming(String MPTName){
+    private void primingMPT (String MPTName){
         
         if (currentMPs.containsKey(MPTName)){
             //no impl
@@ -276,7 +316,53 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
                 //add the MP into the current MP pool
                 currentMPs.put(MPTName, m1);
                 
+                //maintain the selected MP so as to update its tension values
+                maintaintheMPtension t1 = new maintaintheMPtension(m1);
+                taskSpawner.addTask(t1);
+                
             }
+        }
+        
+    }
+    
+    private class maintaintheMPtension extends FrameworkTaskImpl {
+        
+        private pointingMPT theMP;
+        
+        public maintaintheMPtension(MPT m1) {
+            super();
+            
+            theMP = (pointingMPT)m1;
+        }
+
+        @Override
+        protected void runThisFrameworkTask() {
+            
+            /*Two states
+            1. "Seal": before to start the execution
+            --> ferment. quickly increase the tension value of a ready MP
+            2. "Open": after the moment of starting the execution
+            --> leakage. quickly decrease the tension value of a ready MP
+                    */
+
+            if (actionInProgress == false){ // "Seal" using TENSION_ADDED_PERRUN
+                
+                theMP.addTesion(TENSION_ADDED_PERRUN);
+
+            } else {//"Open" using TENSION_REMOVED_PERRUN
+                
+                if (!theMP.getBehavioralSelected()){//If the MP is not the one mapped from the selected behavior
+                    theMP.removeTension(TENSION_REMOVED_PERRUN);
+                    
+                } else{//If the MP is the one from the selected behavior
+                    //its tension will not decrease but just be 'perserved' 
+                    
+                }
+
+            }
+            
+            //System.out.println("MP name:" + theMP.toString() + " and the tension is " + theMP.getTension());
+
         }
         
     }

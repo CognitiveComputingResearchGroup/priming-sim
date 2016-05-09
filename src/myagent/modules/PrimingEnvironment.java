@@ -117,16 +117,18 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         double t = 1.0;//the time duration (sec)
         
-        //System.out.println("forceDirection is " + forceDirection);
+        //System.out.println("UPMotor: forceDirection is " + forceDirection);
         
         xF = Math.cos(forceDirection)*forceMag;
         yF = Math.sin(forceDirection)*forceMag;
+        
+        //System.out.println("xF: " + xF + "yF: " + yF);
         
         xS = force2speed(xF);
         yS = force2speed(yF);
         
         //The orginal point of the canvas is on the top left
-        //Thus, for moving to top right, x dim increases while y decreases
+        //Thus, x dim increases while y decreases
     	p.x= p.x + xS * t;
     	p.y= p.y - yS * t;
     }
@@ -137,16 +139,20 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         double t = 1.0;//the time duration (sec)
         
+        //System.out.println("LOWERMotor: forceDirection is " + forceDirection);
+        
         xF = Math.cos(forceDirection)*forceMag;
         yF = Math.sin(forceDirection)*forceMag;
+        
+        //System.out.println("xF: " + xF + "yF: " + yF);
         
         xS = force2speed(xF);
         yS = force2speed(yF);
         
         //The orginal point of the canvas is on the top left
-        //Thus, for moving to top right, x dim decreases while y increases
-    	p.x= p.x - xS * t;
-    	p.y= p.y + yS * t;
+        //Thus, x dim decreases while y increases
+    	p.x= p.x + xS * t;
+    	p.y= p.y - yS * t;
    
     }
     

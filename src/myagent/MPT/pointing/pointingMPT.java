@@ -8,6 +8,7 @@ package myagent.MPT.pointing;
 import java.util.Map;
 
 import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.FSM;
+import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.MPTension;
 import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.SubsumptionMPTImpl;
 import java.util.logging.Level;
 import myagent.modules.PrimingSensoryMotorSystem;
@@ -16,11 +17,13 @@ import myagent.modules.PrimingSensoryMotorSystem;
  *
  * @author Daqi
  */
-public abstract class pointingMPT extends SubsumptionMPTImpl{
+public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTension{
    
     protected FSM theFSM;
     
     protected double tension;
+    
+    protected boolean behavioralSelected;
     
     //private double FOO;
 
@@ -35,6 +38,8 @@ public abstract class pointingMPT extends SubsumptionMPTImpl{
         //FOO = PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF;
         
         tension = 0.0;
+        
+        behavioralSelected =false;
         
     }
     
@@ -64,6 +69,16 @@ public abstract class pointingMPT extends SubsumptionMPTImpl{
         }
         
     }
+    
+    public void setBehavioralSelected(boolean val){
+        behavioralSelected = val;
+    }
+    
+    public boolean getBehavioralSelected(){
+        return behavioralSelected;
+    }
+    
+    
 
     @Override
     public void receiveData(Object o) {
