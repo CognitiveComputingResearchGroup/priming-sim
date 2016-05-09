@@ -41,12 +41,24 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
   
     private boolean actionInProgress = false;
     
-    private Map<String, Object> algoMPTMap = new HashMap<String, Object>();
+    private Map<String, Object> MPTInstanceMap = new HashMap <String, Object>();
+    
+    //The name of MPTs
+    public static final String MPT_TopRight = "topRight";
+    public static final String MPT_BottomLeft = "bottomLeft";
+    
+    private Map<String, String> algoMPTMap = new HashMap<String, String>();
     
     //The name of these algorithms are defined in the configure file;
     //The consistency is necessary
-    public static final String topRightMPT = "algorithm.topRight";
-    public static final String bottomLeftMPT = "algorithm.bottomLeft";
+    public static final String algo_TopRightMPT = "algorithm.topRight";
+    public static final String algo_BottomLeftMPT = "algorithm.bottomLeft";
+    
+    private Map<Integer, String> sensoryDataMPTMap = new HashMap <Integer, String>();
+    
+    //The sensory data (target stimulus area/position)
+    public static final Integer pos_TopRight = 1;
+    public static final Integer pos_BottomLeft = 3;
     
     //default moving force (N)
     public static final double MOVING_FORCE_DEF = 1.0;
@@ -81,24 +93,41 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
         
         MPT m;
         
+        //Init the MPT instance map
         m = new PointingTopRightMPT();
         m.init();
         m.receiveTS(taskSpawner);
         
-        algoMPTMap.put(topRightMPT, m);
+        MPTInstanceMap.put(MPT_TopRight, m);
         
         m = new PointingBottomLeftMPT();
         m.init();
         m.receiveTS(taskSpawner);
         
-        algoMPTMap.put(bottomLeftMPT, m);
+        MPTInstanceMap.put(MPT_BottomLeft, m);
+        
+        //Init the algo MPT map
+        algoMPTMap.put(algo_TopRightMPT, MPT_TopRight);
+        
+        algoMPTMap.put(algo_BottomLeftMPT, MPT_BottomLeft);
+        
+        //Init the sensory data MPT map
+        sensoryDataMPTMap.put(pos_TopRight, MPT_TopRight);
+        sensoryDataMPTMap.put(pos_BottomLeft, MPT_BottomLeft);
+        
         
     }
 
     @Override
     public MPT selectMPT(Object alg) {
         
-        return (MPT)algoMPTMap.get((String)alg);
+        String MPTname = algoMPTMap.get((String)alg);
+        
+        if (MPTname != null)
+            return (MPT)MPTInstanceMap.get(MPTname);
+        else{
+            return null;
+        }
 
     }
     
