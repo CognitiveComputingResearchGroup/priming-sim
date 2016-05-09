@@ -70,6 +70,10 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     
     private MPT currentMP; //Conceptually 'currentMP' is a MP while it is implemented by a MPT
     
+    private Map <String, Object> currentMPs = new HashMap <String, Object>();
+
+    public static final String target_color = "red";
+    
     /**
      * Default constructor
      */
@@ -198,14 +202,82 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
         //recieve data
         //no impl
         
+        if (content == null)
+            return;//ignore the empty states
+        
         //update
         if (currentMP != null)
         {
             currentMP.update();
         }
         
-        //TODO:
         //priming: cue a new MPT to execute
+        
+        //1. retrieve the relevant sensory data
+        Map sensoryData = (Map) content;
+        Integer pos = 0;
+        
+        Object obj;
+        
+        String MPTName;
+        
+        if (sensoryData.containsKey(target_color)){
 
+            if ((Boolean)sensoryData.get(target_color) == true){
+                obj = sensoryData.get(target_color+"_position");
+
+                if (obj != null){
+                    pos = (Integer) obj;        
+                }
+            }
+        }
+        
+        //System.out.println("the pos is: " + pos);
+        
+        //2. prime the relevant MP
+        obj = sensoryDataMPTMap.get(pos);
+        
+        if (obj != null){
+            MPTName = (String)obj;
+            
+            if (actionInProgress == false){//Before the start of action execution
+                //Create new MP in the current MPs pool
+                priming(MPTName);
+                
+            } else {//During action execution
+                //Support current existing MP
+                
+            }
+        }
+        
+
+
+    }
+    
+    
+    /*
+    Create new motor plan (MP) driven by the arrival of relevant sensory data
+    when the action execution is not started yet
+    */
+    private void priming(String MPTName){
+        
+        if (currentMPs.containsKey(MPTName)){
+            //no impl
+            //TODO add a few amount of tension?
+        } else {
+            //add a new MP into the current pool
+            //if there is a relevant MPT available
+            if (MPTInstanceMap.containsKey(MPTName)){
+                MPT m1 = (MPT)MPTInstanceMap.get(MPTName);
+                
+                //MPT --> MP
+                m1.specify();
+                
+                //add the MP into the current MP pool
+                currentMPs.put(MPTName, m1);
+                
+            }
+        }
+        
     }
 }

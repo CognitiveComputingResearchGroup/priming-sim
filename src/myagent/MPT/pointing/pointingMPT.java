@@ -20,6 +20,8 @@ public abstract class pointingMPT extends SubsumptionMPTImpl{
    
     protected FSM theFSM;
     
+    protected double tension;
+    
     //private double FOO;
 
     @Override
@@ -32,9 +34,36 @@ public abstract class pointingMPT extends SubsumptionMPTImpl{
         
         //FOO = PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF;
         
+        tension = 0.0;
+        
     }
     
     public abstract void specifyTheFSM();
+    
+    public void setTension (double val){
+        tension = val;
+    }
+    
+    public double getTension (){
+        return tension;
+    }
+    
+    public void addTesion (double val){
+        
+        if (val > 0.0){
+            tension = tension + val;
+        }
+    }
+    
+    public void removeTension(double val){
+        
+        if (val < tension){
+            tension = tension - val;
+        } else{
+            tension = 0.0;
+        }
+        
+    }
 
     @Override
     public void receiveData(Object o) {

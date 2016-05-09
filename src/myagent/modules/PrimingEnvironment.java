@@ -37,6 +37,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
     //Its range is 1~10, higher is stronger (quicker)
     public static final double MOTOR_POWER = 5;
 
+
     @Override
     public void init(){
     blankDuration=(int) getParam("blank_duration", 10);
