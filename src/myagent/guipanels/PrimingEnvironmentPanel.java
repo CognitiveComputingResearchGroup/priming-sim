@@ -195,27 +195,6 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 
 			g.drawImage(scaledImage, xCentered, yCentered, this);
                         
-                        //For producing the experiment result
-                        generateDistanceToTarget();
 		}
-                
-                void generateDistanceToTarget(){
-                    
-                    double distance, tick;
-                    
-                    double target_x = img.getWidth()*5/6, target_y = img.getHeight()/6;
-                    
-                    double tick1, tick2;
-                    
-                    tick1 = TaskManager.getCurrentTick();
-                    
-                    Point2d current_p=environment.p;
-                    
-                    distance = Math.sqrt(Math.pow((target_x - current_p.x), 2) + Math.pow((target_y - current_p.y), 2));
-                    
-                    tick2 = TaskManager.getCurrentTick();
-                    
-                    System.out.println("dis:" + distance + " tick:" + (tick1 + tick2)/2);
-                }
 	}
 }

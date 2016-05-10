@@ -10,6 +10,15 @@ import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.jmatio.types.MLDouble;
+import com.jmatio.io.MatFileWriter;
+import edu.memphis.ccrg.lida.framework.tasks.FrameworkTaskImpl;
+
+import java.util.ArrayList;
+import java.io.File;
+
+import java.io.IOException;
+
 public class PrimingEnvironment extends EnvironmentImpl{
 
     private static final Logger logger = Logger.getLogger(PrimingEnvironment.class.getCanonicalName());
@@ -36,31 +45,44 @@ public class PrimingEnvironment extends EnvironmentImpl{
     //The power of the motor represents the speed the movement could be.
     //Its range is 1~10, higher is stronger (quicker)
     public static final double MOTOR_POWER = 1;
+    
+    ///////////////For the output of experimental results//////////////////
+    private final static int MAX_TICK_SIZE = 1000;
+    
+    //two data in one item: distance and tick
+    double[][] distanceData = new double[MAX_TICK_SIZE][2];
+    
+    int arrayIndex = 0;
 
 
     @Override
     public void init(){
-    blankDuration=(int) getParam("blankDuration", 10);
+        blankDuration=(int) getParam("blankDuration", 10);
 
-    blankData.put("dot_color","white");
-    blankData.put("dot_Xpos", 1);
-    blankData.put("dot_Ypos", 1);
+        blankData.put("dot_color","white");
+        blankData.put("dot_Xpos", 1);
+        blankData.put("dot_Ypos", 1);
 
 
-    targetData.put( "red",true);
-    targetData.put( "green",true);
-    targetData.put("red_position", 1);
-    targetData.put("green_position", 3);
+        targetData.put( "red",true);
+        targetData.put( "green",true);
+        targetData.put("red_position", 1);
+        targetData.put("green_position", 3);
 
-    consistentPrimingData.put("red", true);
-    consistentPrimingData.put("green", true );
-    consistentPrimingData.put("red_position", 1);
-    consistentPrimingData.put("green_position", 3);
+        consistentPrimingData.put("red", true);
+        consistentPrimingData.put("green", true );
+        consistentPrimingData.put("red_position", 1);
+        consistentPrimingData.put("green_position", 3);
 
-    inconsistentPrimingData.put( "red",true);
-    inconsistentPrimingData.put( "green",true);
-    inconsistentPrimingData.put("red_position", 3);
-    inconsistentPrimingData.put("green_position", 1);
+        inconsistentPrimingData.put( "red",true);
+        inconsistentPrimingData.put( "green",true);
+        inconsistentPrimingData.put("red_position", 3);
+        inconsistentPrimingData.put("green_position", 1);
+        
+
+        //For producing the experiment result
+        generateDistanceToTarget t1 = new generateDistanceToTarget();
+        taskSpawner.addTask(t1);
     }
 
     @Override
@@ -83,8 +105,9 @@ public class PrimingEnvironment extends EnvironmentImpl{
         else{
                 return targetData;
         }
+              
     }
-
+                
     @Override
     public void processAction(Object commands) {
 
@@ -195,6 +218,57 @@ public class PrimingEnvironment extends EnvironmentImpl{
     public void resetState() {
             // TODO Auto-generated method stub
 
+    }
+    
+    
+    private class generateDistanceToTarget extends FrameworkTaskImpl {
+
+
+        @Override
+        protected void runThisFrameworkTask() {
+            
+            double distance = 0.0, tick = 0;
+
+            double target_x = ENVIRONMENT_WIDTH*5/6, target_y = ENVIRONMENT_HEIGHT/6;
+
+            distance = Math.sqrt(Math.pow((target_x - p.x), 2) + Math.pow((target_y - p.y), 2));
+
+            tick = TaskManager.getCurrentTick();
+
+            //System.out.println("dis:" + distance + " tick:" + tick);
+
+            if (arrayIndex < MAX_TICK_SIZE){
+
+                if (arrayIndex > 0){//if there is at least one item in the array
+                    double lastTick = distanceData[arrayIndex - 1][1];
+
+                    //System.out.println("arrayIndex is " + arrayIndex + " lastTick:" + lastTick + " tick:" + tick);
+
+                    if (lastTick == tick){//ignore the repeated tick
+
+                        //System.out.println("arrayIndex is " + arrayIndex + " returnred tick is " + tick);
+
+                        return;
+                    }
+                }
+
+                //System.out.println("arrayIndex is " + arrayIndex);
+                distanceData[arrayIndex][0] = distance;
+                distanceData[arrayIndex][1] = tick;
+
+                System.out.println("dis:" + distance + " tick:" + tick);
+
+
+            } else if (arrayIndex == MAX_TICK_SIZE) {
+                //System.out.println("distanceData is: " + distanceData);
+
+            } else{
+                cancel();
+            }
+
+            arrayIndex += 1;
+        }
+        
     }
 
 }
