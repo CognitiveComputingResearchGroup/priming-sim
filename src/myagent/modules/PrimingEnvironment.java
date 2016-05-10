@@ -257,10 +257,31 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 distanceData[arrayIndex][1] = tick;
 
                 System.out.println("dis:" + distance + " tick:" + tick);
+                
+                if (distance < 1.0){//to make the next one to be the time to record data
+                    arrayIndex = MAX_TICK_SIZE - 1;
+                }
 
 
             } else if (arrayIndex == MAX_TICK_SIZE) {
-                //System.out.println("distanceData is: " + distanceData);
+                System.out.println("Saving the distance data...");
+                
+                //Save the distance data in the format of Matlab
+                MLDouble mlDouble1 = new MLDouble("dis50", distanceData);
+
+                ArrayList list1 = new ArrayList();
+
+                list1.add(mlDouble1);
+
+                try{
+                    new MatFileWriter(".\\data\\distanceBlank50.mat", list1);
+                }
+                catch(IOException e)
+                {
+                    System.out.println("distanceData IOError");
+                }
+                
+                System.out.println("The distance data has been saved!");
 
             } else{
                 cancel();
