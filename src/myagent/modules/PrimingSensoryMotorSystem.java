@@ -221,13 +221,15 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             
             sendActuatorCommand(cmd);
             */
-            
+            Map <String, Object> commands = new HashMap<String, Object> ();
             for (Object theMP: currentMPs.values()){
                 Object cmd = ((MPT)theMP).outputCommands();
                 //System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
-
-                sendActuatorCommand(cmd);
+                String motorName = (String)((Map)cmd).get("MotorName");
+                commands.put(motorName, cmd);
             }
+            
+            sendActuatorCommand(commands);
         }
     }
     

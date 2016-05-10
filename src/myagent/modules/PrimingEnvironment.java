@@ -86,38 +86,58 @@ public class PrimingEnvironment extends EnvironmentImpl{
     }
 
     @Override
-    public void processAction(Object cmd) {
+    public void processAction(Object commands) {
 
         String motorName;
 
         double force, direction;
+        
+        double XS_total = 0.0, YS_total = 0.0;
+        
+        double t = 1.0;//the time duration (sec)
+        
+        Map <String, Double> speeds = new HashMap <String, Double> ();
+        
+        speeds.put("xS", 0.0);
+        speeds.put("yS", 0.0);
+        
+        for (Object theCmd: ((Map)commands).values()){
+            motorName = (String)((Map<String, Object>) theCmd).get("MotorName");
 
-        motorName = (String)((Map<String, Object>) cmd).get("MotorName");
-
-        force = (Double)((Map<String, Object>) cmd).get("Force");
-        direction = (Double)((Map<String, Object>) cmd).get("Direction");
-
-        if (motorName.equals(UPPER_MOTOR_NAME)){
+            force = (Double)((Map<String, Object>) theCmd).get("Force");
+            direction = (Double)((Map<String, Object>) theCmd).get("Direction");
             
-            upperMotorControl(force, direction);
+            if (motorName.equals(UPPER_MOTOR_NAME)){
+            
+                speeds = upperMotorControl(force, direction);
 
-        } else if (motorName.equals(LOWER_MOTOR_NAME)){
-            lowerMotorControl(force, direction + Math.PI);
+            } else if (motorName.equals(LOWER_MOTOR_NAME)){
+                speeds = lowerMotorControl(force, direction + Math.PI);
 
-        } else{
-            logger.log(Level.WARNING, "Required motor is not available!", TaskManager.getCurrentTick());
+            } else{
+                logger.log(Level.WARNING, "Required motor is not available!", TaskManager.getCurrentTick());
+            }
+            
+            XS_total += speeds.get("xS");
+            YS_total += speeds.get("yS");
+        
         }
+
+        //The orginal point of the canvas is on the top left
+        //Thus, x dim increases while y decreases
+    	p.x= p.x + XS_total * t;
+    	p.y= p.y - YS_total * t;
         
         System.out.println("p.x is " + p.x + " and p.y os " + p.y);
 
     }
            
     
-    private void upperMotorControl(double forceMag, double forceDirection){
+    private Map<String, Double> upperMotorControl(double forceMag, double forceDirection){
         
         double xF, yF, xS, yS;
         
-        double t = 1.0;//the time duration (sec)
+        Map <String, Double> output_speed = new HashMap <String, Double> ();
         
         //System.out.println("UPMotor: forceDirection is " + forceDirection);
         
@@ -129,17 +149,18 @@ public class PrimingEnvironment extends EnvironmentImpl{
         xS = force2speed(xF);
         yS = force2speed(yF);
         
-        //The orginal point of the canvas is on the top left
-        //Thus, x dim increases while y decreases
-    	p.x= p.x + xS * t;
-    	p.y= p.y - yS * t;
+        output_speed.put("xS", xS);
+        output_speed.put("yS", yS);
+        
+        return output_speed;
+
     }
 
-    private void lowerMotorControl(double forceMag, double forceDirection){
+    private Map<String, Double> lowerMotorControl(double forceMag, double forceDirection){
         
     	double xF, yF, xS, yS;
         
-        double t = 1.0;//the time duration (sec)
+        Map <String, Double> output_speed = new HashMap <String, Double> ();
         
         //System.out.println("LOWERMotor: forceDirection is " + forceDirection);
         
@@ -151,10 +172,10 @@ public class PrimingEnvironment extends EnvironmentImpl{
         xS = force2speed(xF);
         yS = force2speed(yF);
         
-        //The orginal point of the canvas is on the top left
-        //Thus, x dim decreases while y increases
-    	p.x= p.x + xS * t;
-    	p.y= p.y - yS * t;
+        output_speed.put("xS", xS);
+        output_speed.put("yS", yS);
+        
+        return output_speed;
    
     }
     
