@@ -214,13 +214,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
 
         @Override
         protected void runThisFrameworkTask() {
-        
-            /*
-            Object cmd = currentMP.outputCommands();
-            //System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
-            
-            sendActuatorCommand(cmd);
-            */
+
             Map <String, Object> commands = new HashMap<String, Object> ();
             for (Object theMP: currentMPs.values()){
                 Object cmd = ((MPT)theMP).outputCommands();
@@ -236,22 +230,11 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
 
     @Override
     public void receiveSensoryMemoryContent(Object content) {
-                    
-        //recieve data
-        //no impl
         
         if (content == null)
             return;//ignore the empty states
         
         //update
-        
-        /*
-        if (currentMP != null)
-        {
-            currentMP.update();
-        }
-        */
-        
         for (Object theMP: currentMPs.values()){
             ((MPT)theMP).update();
         }
@@ -287,7 +270,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             
             if (actionInProgress == false){//Before the start of action execution
                 //Create new MP in the current MPs pool
-                primingMPT(MPTName);
+                primingMP(MPTName);
                 
             } else {//During action execution
                 //Support current existing MP
@@ -302,7 +285,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     Create new motor plan (MP) driven by the arrival of relevant sensory data
     when the action execution is not started yet
     */
-    private void primingMPT (String MPTName){
+    private void primingMP (String MPTName){
         
         if (currentMPs.containsKey(MPTName)){
             //no impl
@@ -325,7 +308,6 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
                 
             }
         }
-        
     }
     
     private class maintaintheMPtension extends FrameworkTaskImpl {

@@ -128,7 +128,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
     	p.x= p.x + XS_total * t;
     	p.y= p.y - YS_total * t;
         
-        System.out.println("p.x is " + p.x + " and p.y os " + p.y);
+        //System.out.println("p.x is " + p.x + " and p.y os " + p.y);
 
     }
            

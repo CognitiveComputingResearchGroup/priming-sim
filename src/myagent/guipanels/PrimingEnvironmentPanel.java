@@ -135,16 +135,6 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 	public void refresh() {
 		//img = (BufferedImage) environment.getModuleContent();
 		this.imgPanel.repaint();
-
-
-		//TODO: Show sensed data and commands content in environment panel
-		//Map<String,Object> wheelSpeeds = environment.getWheelsSpeed();
-
-		//double leftWheel = (Double)wheelSpeeds.get("leftWheel");
-		//double rightWheel = (Double)wheelSpeeds.get("rightWheel");
-
-
-
 	}
 
 	private static final int DOT_SIZE=1;
@@ -204,6 +194,28 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 			int yCentered = (getHeight()- scaledImage.getHeight(this)) / 2;
 
 			g.drawImage(scaledImage, xCentered, yCentered, this);
+                        
+                        //For producing the experiment result
+                        generateDistanceToTarget();
 		}
+                
+                void generateDistanceToTarget(){
+                    
+                    double distance, tick;
+                    
+                    double target_x = img.getWidth()*5/6, target_y = img.getHeight()/6;
+                    
+                    double tick1, tick2;
+                    
+                    tick1 = TaskManager.getCurrentTick();
+                    
+                    Point2d current_p=environment.p;
+                    
+                    distance = Math.sqrt(Math.pow((target_x - current_p.x), 2) + Math.pow((target_y - current_p.y), 2));
+                    
+                    tick2 = TaskManager.getCurrentTick();
+                    
+                    System.out.println("dis:" + distance + " tick:" + (tick1 + tick2)/2);
+                }
 	}
 }

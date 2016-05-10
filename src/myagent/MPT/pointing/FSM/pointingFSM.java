@@ -102,7 +102,6 @@ public abstract class pointingFSM extends FSMImpl{
             case STATE_MOVE:
                 
                 commands.put("Force", moveing_force);
-
                 commands.put("Direction", moving_direction);
                 
                 state = STATE_MOVE;
