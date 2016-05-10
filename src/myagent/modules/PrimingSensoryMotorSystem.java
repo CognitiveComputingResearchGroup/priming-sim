@@ -69,7 +69,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     //default direction in radians (45 degrees)
     public static final double MOVING_DIRECTION_DEF = Math.PI/4;
     
-    public static final double TENSION_ADDED_PERRUN = 5.0;
+    public static final double TENSION_ADDED_PERRUN = 10.0;
     
     public static final double TENSION_REMOVED_PERRUN = 5.0;
     
@@ -202,6 +202,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             OutputMPTCommands t1 = new OutputMPTCommands();
             taskSpawner.addTask(t1);
                         
+            System.out.println("Action execution start!");
             actionInProgress = true;
         } else {
             logger.log(Level.WARNING, "Received null action", TaskManager.getCurrentTick());
@@ -223,7 +224,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             
             for (Object theMP: currentMPs.values()){
                 Object cmd = ((MPT)theMP).outputCommands();
-                System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
+                //System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
 
                 sendActuatorCommand(cmd);
             }

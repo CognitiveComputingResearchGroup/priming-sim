@@ -63,14 +63,28 @@ public abstract class pointingFSM extends FSMImpl{
     @Override
     public void specify(Object o){
         //this Object o supose to pass the direction value to this FSM
-        moving_direction = (Double) o;
+        //moving_direction = (Double) o;
+        
+        Map commandVal = (Map)o;
+        
+        moveing_force = (Double)commandVal.get("force");
+        moving_direction = (Double)commandVal.get("direction");
+        
+        //System.out.println("specified force is : " + moveing_force);
 
     }
     
     @Override
     public void update(Object o){
         //this Object o supose to pass the direction value to this FSM
-        moving_direction = (Double) o;
+        //moving_direction = (Double) o;
+        
+        Map commandVal = (Map)o;
+        
+        moveing_force = (Double)commandVal.get("force");
+        moving_direction = (Double)commandVal.get("direction");
+        
+        //System.out.println("updated force is : " + moveing_force);
 
     }
     
@@ -79,7 +93,7 @@ public abstract class pointingFSM extends FSMImpl{
         switch (state){
             case STATE_NIL:
 
-                //commands.put("Force", null);
+                commands.put("Force", 0.0);
                 commands.put("Direction", 0.0);
                 
                 state = STATE_MOVE;
@@ -87,9 +101,8 @@ public abstract class pointingFSM extends FSMImpl{
                 
             case STATE_MOVE:
                 
-                //commands.put("Force", moveing_force);
-                //TODO:Do we need to specify a specific direction degree here,
-                //maybe driven by the sensory data passed from sensory memory?
+                commands.put("Force", moveing_force);
+
                 commands.put("Direction", moving_direction);
                 
                 state = STATE_MOVE;

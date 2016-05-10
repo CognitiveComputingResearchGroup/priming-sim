@@ -35,12 +35,12 @@ public class PrimingEnvironment extends EnvironmentImpl{
     
     //The power of the motor represents the speed the movement could be.
     //Its range is 1~10, higher is stronger (quicker)
-    public static final double MOTOR_POWER = 5;
+    public static final double MOTOR_POWER = 1;
 
 
     @Override
     public void init(){
-    blankDuration=(int) getParam("blank_duration", 10);
+    blankDuration=(int) getParam("blankDuration", 10);
 
     blankData.put("dot_color","white");
     blankData.put("dot_Xpos", 1);
@@ -65,24 +65,24 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
     @Override
     public Object getState(Map<String, ?> arg0) {
-
-            if(TaskManager.getCurrentTick()<=FIXATION_PERIOD){
-                    return blankData;
-            }
-            else if(TaskManager.getCurrentTick()>FIXATION_PERIOD && TaskManager.getCurrentTick()<=(PRIME_DURATION+FIXATION_PERIOD)){
-                    if((boolean) getParam("consistent", true)){
-                     return consistentPrimingData;	
-                    }
-                    else{
-                            return inconsistentPrimingData;
-                    }
-            }
-            else if(TaskManager.getCurrentTick()>(PRIME_DURATION+FIXATION_PERIOD) && TaskManager.getCurrentTick()<=(blankDuration+PRIME_DURATION+FIXATION_PERIOD)){
-                    return blankData;
-            }
-            else{
-                    return targetData;
-            }
+        
+        if(TaskManager.getCurrentTick()<=FIXATION_PERIOD){
+                return blankData;
+        }
+        else if(TaskManager.getCurrentTick()>FIXATION_PERIOD && TaskManager.getCurrentTick()<=(PRIME_DURATION+FIXATION_PERIOD)){
+                if((boolean) getParam("consistent", true)){
+                 return consistentPrimingData;	
+                }
+                else{
+                        return inconsistentPrimingData;
+                }
+        }
+        else if(TaskManager.getCurrentTick()>(PRIME_DURATION+FIXATION_PERIOD) && TaskManager.getCurrentTick()<=(blankDuration+PRIME_DURATION+FIXATION_PERIOD)){
+                return blankData;
+        }
+        else{
+                return targetData;
+        }
     }
 
     @Override
@@ -107,6 +107,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
         } else{
             logger.log(Level.WARNING, "Required motor is not available!", TaskManager.getCurrentTick());
         }
+        
+        System.out.println("p.x is " + p.x + " and p.y os " + p.y);
 
     }
            
