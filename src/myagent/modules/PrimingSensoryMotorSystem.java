@@ -63,12 +63,6 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
     
     private Map <String, Object> currentMPs = new HashMap <String, Object>();
        
-    //default moving force (N)
-    public static final double MOVING_FORCE_DEF = 1.0;
-
-    //default direction in radians (45 degrees)
-    public static final double MOVING_DIRECTION_DEF = Math.PI/4;
-    
     public static final double TENSION_ADDED_PERRUN = 10.0;
     
     public static final double TENSION_REMOVED_PERRUN = 5.0;
@@ -218,7 +212,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             Map <String, Object> commands = new HashMap<String, Object> ();
             for (Object theMP: currentMPs.values()){
                 Object cmd = ((MPT)theMP).outputCommands();
-                //System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
+                System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
                 String motorName = (String)((Map)cmd).get("MotorName");
                 commands.put(motorName, cmd);
             }
@@ -335,14 +329,8 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
                 theMP.addTesion(TENSION_ADDED_PERRUN);
 
             } else {//"Open" using TENSION_REMOVED_PERRUN
-                
-                if (!theMP.getBehavioralSelected()){//If the MP is not the one mapped from the selected behavior
-                    theMP.removeTension(TENSION_REMOVED_PERRUN);
-                    
-                } else{//If the MP is the one from the selected behavior
-                    //its tension will not decrease but just be 'perserved' 
-                    
-                }
+
+                theMP.removeTension(TENSION_REMOVED_PERRUN);
 
             }
             

@@ -256,7 +256,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 distanceData[arrayIndex][0] = distance;
                 distanceData[arrayIndex][1] = tick;
 
-                System.out.println("dis:" + distance + " tick:" + tick);
+                //System.out.println("dis:" + distance + " tick:" + tick);
                 
                 if (distance < 1.0){//to make the next one to be the time to record data
                     arrayIndex = MAX_TICK_SIZE - 1;

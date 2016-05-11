@@ -28,6 +28,12 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
     
     protected Map <String, Double> CommandVal = new HashMap <String, Double>();
     
+    //default moving force (N)
+    public static final double MOVING_FORCE_DEF = 10.0;
+
+    //default direction in radians (45 degrees)
+    public static final double MOVING_DIRECTION_DEF = Math.PI/4;
+    
     public static final double TENSION_TO_FORCE_RATE = 0.01;
     
     //private double FOO;
@@ -46,8 +52,8 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
         
         behavioralSelected =false;
         
-        CommandVal.put("force", PrimingSensoryMotorSystem.MOVING_FORCE_DEF);
-        CommandVal.put("direction", PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF);
+        CommandVal.put("force", 0.0);
+        CommandVal.put("direction", 0.0);
         
     }
     
@@ -97,20 +103,33 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
     public void specify() {
         //theFSM.specify(PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF);
         
-        CommandVal.put("force", tension*TENSION_TO_FORCE_RATE);
+        
+        CommandVal.put("direction", MOVING_DIRECTION_DEF);
+        
+        double force_val = tension*TENSION_TO_FORCE_RATE;
+        
+        if ((behavioralSelected == true)&& (force_val < MOVING_FORCE_DEF)){
+            force_val = MOVING_FORCE_DEF;
+        }
+        
+        CommandVal.put("force", force_val);
+        
         theFSM.specify(CommandVal);
 
     }
     
     @Override
     public void update() {
-        //logger.log(Level.INFO, "updating MC variables ...");
-        //FOO = FOO + 0.01;
-                
-        //theFSM.update(PrimingSensoryMotorSystem.MOVING_DIRECTION_DEF);
-        //theFSM.update(FOO);
+
+        CommandVal.put("direction", MOVING_DIRECTION_DEF);
         
-        CommandVal.put("force", tension*TENSION_TO_FORCE_RATE);
+        double force_val = tension*TENSION_TO_FORCE_RATE;
+        
+        if ((behavioralSelected == true)&& (force_val < MOVING_FORCE_DEF)){
+            force_val = MOVING_FORCE_DEF;
+        }
+        
+        CommandVal.put("force", force_val);
         
         theFSM.update(CommandVal);
     }

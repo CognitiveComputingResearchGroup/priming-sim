@@ -45,8 +45,8 @@ public abstract class pointingFSM extends FSMImpl{
         moving_direction = 0.0;
 
         commands.put("MotorName", null);
-        //Fixed force
-        commands.put("Force", PrimingSensoryMotorSystem.MOVING_FORCE_DEF);
+
+        commands.put("Force", 0.0);
         commands.put("Direction", 0.0);
         
         setMotorName();
