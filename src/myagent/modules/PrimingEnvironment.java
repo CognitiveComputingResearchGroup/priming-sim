@@ -53,6 +53,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
     double[][] distanceData = new double[MAX_TICK_SIZE][2];
     
     int arrayIndex = 0;
+    
+    boolean ouputdata_flag = true;
 
 
     @Override
@@ -79,10 +81,15 @@ public class PrimingEnvironment extends EnvironmentImpl{
         inconsistentPrimingData.put("red_position", 3);
         inconsistentPrimingData.put("green_position", 1);
         
-
-        //For producing the experiment result
-        generateDistanceToTarget t1 = new generateDistanceToTarget();
-        taskSpawner.addTask(t1);
+        ouputdata_flag = true;
+        
+        for (int i = 0; i< MAX_TICK_SIZE; i++){
+            distanceData[i][0] = 0.0;
+            distanceData[i][1] = 0.0;
+        }
+        
+        arrayIndex = 0;
+        
     }
 
     @Override
@@ -103,6 +110,13 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 return blankData;
         }
         else{
+                if (ouputdata_flag == true){
+                    //For producing the experiment result
+                    generateDistanceToTarget t1 = new generateDistanceToTarget();
+                    taskSpawner.addTask(t1);
+                    
+                    ouputdata_flag = false;
+                }
                 return targetData;
         }
               
@@ -239,6 +253,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
             if (arrayIndex < MAX_TICK_SIZE){
 
+                
                 if (arrayIndex > 0){//if there is at least one item in the array
                     double lastTick = distanceData[arrayIndex - 1][1];
 
@@ -246,12 +261,13 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
                     if (lastTick == tick){//ignore the repeated tick
 
-                        //System.out.println("arrayIndex is " + arrayIndex + " returnred tick is " + tick);
+                        System.out.println("arrayIndex is " + arrayIndex + " returnred tick is " + tick);
 
                         return;
                     }
                 }
-
+                        
+                
                 //System.out.println("arrayIndex is " + arrayIndex);
                 distanceData[arrayIndex][0] = distance;
                 distanceData[arrayIndex][1] = tick;
@@ -262,19 +278,23 @@ public class PrimingEnvironment extends EnvironmentImpl{
                     arrayIndex = MAX_TICK_SIZE - 1;
                 }
 
-
+                if (distanceData[arrayIndex][0] != 0.0 && distanceData[arrayIndex][1] != 0.0)
+                {
+                    arrayIndex += 1;
+                }
+                
             } else if (arrayIndex == MAX_TICK_SIZE) {
                 System.out.println("Saving the distance data...");
                 
                 //Save the distance data in the format of Matlab
-                MLDouble mlDouble1 = new MLDouble("dis50", distanceData);
+                MLDouble mlDouble1 = new MLDouble("dis10", distanceData);
 
                 ArrayList list1 = new ArrayList();
 
                 list1.add(mlDouble1);
 
                 try{
-                    new MatFileWriter(".\\data\\distanceBlank50.mat", list1);
+                    new MatFileWriter(".\\data\\distanceBlank10.mat", list1);
                 }
                 catch(IOException e)
                 {
@@ -287,7 +307,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 cancel();
             }
 
-            arrayIndex += 1;
+
         }
         
     }

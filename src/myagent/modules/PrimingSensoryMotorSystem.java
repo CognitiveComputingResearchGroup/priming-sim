@@ -186,6 +186,8 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             //control the selected MP to have current tension to be kept 
             selectedMP.setBehavioralSelected(true);
             
+            System.out.println("The action execution starts...");
+            
             //online control
             //currentMP.onlineControl();
             
@@ -212,7 +214,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             Map <String, Object> commands = new HashMap<String, Object> ();
             for (Object theMP: currentMPs.values()){
                 Object cmd = ((MPT)theMP).outputCommands();
-                System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
+                //System.out.println("OutputMPTCommands::the command sent to environment is: " + cmd);
                 String motorName = (String)((Map)cmd).get("MotorName");
                 commands.put(motorName, cmd);
             }
