@@ -49,12 +49,15 @@ public class PrimingEnvironment extends EnvironmentImpl{
     ///////////////For the output of experimental results//////////////////
     private final static int MAX_TICK_SIZE = 1000;
     
+    private final static double TARGET_X = ENVIRONMENT_WIDTH*5/6;
+    private final static double TARGET_y = ENVIRONMENT_WIDTH/6;
+    
     //two data in one item: distance and tick
     double[][] distanceData = new double[MAX_TICK_SIZE][2];
     
     int arrayIndex = 0;
     
-    boolean ouputdata_flag = true;
+    //boolean ouputdata_flag = true;
 
 
     @Override
@@ -81,14 +84,32 @@ public class PrimingEnvironment extends EnvironmentImpl{
         inconsistentPrimingData.put("red_position", 3);
         inconsistentPrimingData.put("green_position", 1);
         
-        ouputdata_flag = true;
+        //ouputdata_flag = true;
         
         for (int i = 0; i< MAX_TICK_SIZE; i++){
-            distanceData[i][0] = 0.0;
-            distanceData[i][1] = 0.0;
+            distanceData[i][0] = -1.0;
+            distanceData[i][1] = -1.0;
         }
         
         arrayIndex = 0;
+        
+                        
+    //synchronized(this) {
+        //if (ouputdata_flag == true){
+
+        //This flag must to be switched in the beginning of this code block
+        //since this method may be called multiply in parallel 
+        //ouputdata_flag = false;
+
+        //For producing the experiment result
+        System.out.println("Creating the output task...");
+        generateDistanceToTarget t1 = new generateDistanceToTarget();
+        taskSpawner.addTask(t1);
+
+        
+
+        //}
+    //}
         
     }
 
@@ -110,13 +131,6 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 return blankData;
         }
         else{
-                if (ouputdata_flag == true){
-                    //For producing the experiment result
-                    generateDistanceToTarget t1 = new generateDistanceToTarget();
-                    taskSpawner.addTask(t1);
-                    
-                    ouputdata_flag = false;
-                }
                 return targetData;
         }
               
@@ -243,30 +257,13 @@ public class PrimingEnvironment extends EnvironmentImpl{
             
             double distance = 0.0, tick = 0;
 
-            double target_x = ENVIRONMENT_WIDTH*5/6, target_y = ENVIRONMENT_HEIGHT/6;
-
-            distance = Math.sqrt(Math.pow((target_x - p.x), 2) + Math.pow((target_y - p.y), 2));
+            distance = Math.sqrt(Math.pow((TARGET_X - p.x), 2) + Math.pow((TARGET_y - p.y), 2));
 
             tick = TaskManager.getCurrentTick();
 
             //System.out.println("dis:" + distance + " tick:" + tick);
 
             if (arrayIndex < MAX_TICK_SIZE){
-
-                
-                if (arrayIndex > 0){//if there is at least one item in the array
-                    double lastTick = distanceData[arrayIndex - 1][1];
-
-                    //System.out.println("arrayIndex is " + arrayIndex + " lastTick:" + lastTick + " tick:" + tick);
-
-                    if (lastTick == tick){//ignore the repeated tick
-
-                        System.out.println("arrayIndex is " + arrayIndex + " returnred tick is " + tick);
-
-                        return;
-                    }
-                }
-                        
                 
                 //System.out.println("arrayIndex is " + arrayIndex);
                 distanceData[arrayIndex][0] = distance;
@@ -278,12 +275,9 @@ public class PrimingEnvironment extends EnvironmentImpl{
                     arrayIndex = MAX_TICK_SIZE - 1;
                 }
 
-                if (distanceData[arrayIndex][0] != 0.0 && distanceData[arrayIndex][1] != 0.0)
-                {
-                    arrayIndex += 1;
-                }
+                arrayIndex = arrayIndex + 1;
                 
-            } else if (arrayIndex == MAX_TICK_SIZE) {
+            } else {// (arrayIndex >= MAX_TICK_SIZE)
                 System.out.println("Saving the distance data...");
                 
                 //Save the distance data in the format of Matlab
@@ -302,11 +296,12 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 }
                 
                 System.out.println("The distance data has been saved!");
-
-            } else{
+                
                 cancel();
+
             }
 
+            
 
         }
         
