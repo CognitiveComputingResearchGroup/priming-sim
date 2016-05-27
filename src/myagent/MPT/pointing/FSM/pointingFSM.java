@@ -84,7 +84,7 @@ public abstract class pointingFSM extends FSMImpl{
         moveing_force = (Double)commandVal.get("force");
         moving_direction = (Double)commandVal.get("direction");
         
-        System.out.println(commands.get("MotorName") + "::updated force is : " + moveing_force);
+        //System.out.println(commands.get("MotorName") + "::updated force is : " + moveing_force);
 
     }
     

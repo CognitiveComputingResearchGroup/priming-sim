@@ -65,7 +65,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
        
     public static final double TENSION_ADDED_PERRUN = 10.0;
     
-    public static final double TENSION_REMOVED_PERRUN = 5.0;
+    public static final double TENSION_REMOVED_PERRUN = 10.0;
     
     public static final String target_color = "red";
     
@@ -183,7 +183,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
                 currentMPs.put(MPTName, selectedMP);
             }
                             
-            //control the selected MP to have current tension to be kept 
+            //control the selected MP to have some default force
             selectedMP.setBehavioralSelected(true);
             
             System.out.println("The action execution starts...");

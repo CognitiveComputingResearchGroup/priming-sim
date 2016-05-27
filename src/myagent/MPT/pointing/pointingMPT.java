@@ -30,6 +30,21 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
     
     //default moving force (N)
     public static final double MOVING_FORCE_DEF = 10.0;
+    
+    //The total force applied to the motors
+    //an assumption is that humans apply fixed total force to move its finger, 
+    //thus during the medium period (>50% of the total) of the movement, the speed
+    //reaches to a fixed max
+    //public static final double MAX_TOTOAL_FORCE = 50.0;
+    
+    //public double current_total_force = 0.0;
+        
+    //to record the running time of spcify() and update()
+    //public int current_t = 1;
+    
+    //public static final double theta1 = 2.0, theta2 = 10.0, theta3 = 3.0;
+    
+    //public static final int Ellipse_A = 30, Ellipse_B = 1;
 
     //default direction in radians (45 degrees)
     public static final double MOVING_DIRECTION_DEF = Math.PI/4;
@@ -128,6 +143,49 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
         if ((behavioralSelected == true)&& (force_val < MOVING_FORCE_DEF)){
             force_val = MOVING_FORCE_DEF;
         }
+        
+
+        /*
+        if (behavioralSelected == true)
+        {
+            System.out.println("update force is" + force_val);
+
+            //tuning the force using a sigmoid function
+            //force_val *= theta1/(1 + Math.pow(Math.E, Math.abs(current_t - theta2)/theta3));
+            
+            if (current_t < 2*Ellipse_A){
+                //tuning the force using a ellipse function
+                double current_B, rate;
+
+                current_B = (force_val/(MOVING_FORCE_DEF*2))*Ellipse_B;
+
+                //current_B = Ellipse_B;
+
+                //rate = Math.sqrt(Math.pow(current_B, 2) - 
+                //        (Math.pow(current_B, 2)/Math.pow(Ellipse_A, 2))*Math.pow(current_t - Ellipse_A, 2));
+                rate = current_B*Math.sqrt(1- Math.pow((current_t-Ellipse_A)/Ellipse_A, 2));
+
+                
+                System.out.println("current_B->" + current_B + " current_t->" + current_t + " rate->" + rate);
+                
+                
+                force_val*= rate;
+                
+                current_t += 1;
+                
+                
+            } else{
+                force_val = 0.0;
+            }
+            
+            if (force_val < MOVING_FORCE_DEF)
+                force_val = MOVING_FORCE_DEF;
+
+            System.out.println("new update force is " + force_val);
+
+
+        }
+                */
         
         CommandVal.put("force", force_val);
         

@@ -19,6 +19,10 @@ import java.io.File;
 
 import java.io.IOException;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class PrimingEnvironment extends EnvironmentImpl{
 
     private static final Logger logger = Logger.getLogger(PrimingEnvironment.class.getCanonicalName());
@@ -44,7 +48,17 @@ public class PrimingEnvironment extends EnvironmentImpl{
     
     //The power of the motor represents the speed the movement could be.
     //Its range is 1~10, higher is stronger (quicker)
-    public static final double MOTOR_POWER = 1;
+    //public static final double MOTOR_POWER = 1;
+    
+    
+    public static final double MASS = 2000.0;
+
+    public double XS_total = 0.0, YS_total = 0.0;
+    
+    public static final double MAX_Y = 0.35;
+    
+    public static final double MAX_FORCE = MAX_Y*MASS;
+    public double current_total_force = 0.0;
     
     ///////////////For the output of experimental results//////////////////
     private final static int MAX_TICK_SIZE = 1000;
@@ -57,7 +71,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
     
     int arrayIndex = 0;
     
-    //boolean ouputdata_flag = true;
+    boolean ouputdata_flag = true;
 
 
     @Override
@@ -84,32 +98,14 @@ public class PrimingEnvironment extends EnvironmentImpl{
         inconsistentPrimingData.put("red_position", 3);
         inconsistentPrimingData.put("green_position", 1);
         
-        //ouputdata_flag = true;
+        ouputdata_flag = true;
         
         for (int i = 0; i< MAX_TICK_SIZE; i++){
-            distanceData[i][0] = -1.0;
-            distanceData[i][1] = -1.0;
+            distanceData[i][0] = 0.0;
+            distanceData[i][1] = 0.0;
         }
         
         arrayIndex = 0;
-        
-                        
-    //synchronized(this) {
-        //if (ouputdata_flag == true){
-
-        //This flag must to be switched in the beginning of this code block
-        //since this method may be called multiply in parallel 
-        //ouputdata_flag = false;
-
-        //For producing the experiment result
-        System.out.println("Creating the output task...");
-        generateDistanceToTarget t1 = new generateDistanceToTarget();
-        taskSpawner.addTask(t1);
-
-        
-
-        //}
-    //}
         
     }
 
@@ -131,6 +127,20 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 return blankData;
         }
         else{
+                synchronized(this) {
+                    if (ouputdata_flag == true){
+
+                        //This flag must to be switched in the beginning of this code block
+                        //since this method may be called multiply in parallel 
+                        ouputdata_flag = false;
+
+                        //For producing the experiment result
+                        System.out.println("Creating the output task...");
+                        generateDistanceToTarget t1 = new generateDistanceToTarget();
+                        taskSpawner.addTask(t1);
+                    }
+                }
+                
                 return targetData;
         }
               
@@ -143,14 +153,16 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
         double force, direction;
         
-        double XS_total = 0.0, YS_total = 0.0;
-        
         double t = 1.0;//the time duration (sec)
         
         Map <String, Double> speeds = new HashMap <String, Double> ();
         
+        double XS_current = 0.0, YS_current = 0.0;
+        
         speeds.put("xS", 0.0);
         speeds.put("yS", 0.0);
+        
+        double tmp_total_force = 0.0;
         
         for (Object theCmd: ((Map)commands).values()){
             motorName = (String)((Map<String, Object>) theCmd).get("MotorName");
@@ -158,24 +170,63 @@ public class PrimingEnvironment extends EnvironmentImpl{
             force = (Double)((Map<String, Object>) theCmd).get("Force");
             direction = (Double)((Map<String, Object>) theCmd).get("Direction");
             
+            System.out.println("output:: " + motorName + "-->" + force);
+            
             if (motorName.equals(UPPER_MOTOR_NAME)){
             
                 speeds = upperMotorControl(force, direction);
+                
+                tmp_total_force +=force;
 
             } else if (motorName.equals(LOWER_MOTOR_NAME)){
                 speeds = lowerMotorControl(force, direction + Math.PI);
+                
+                tmp_total_force -=force;
 
             } else{
                 logger.log(Level.WARNING, "Required motor is not available!", TaskManager.getCurrentTick());
             }
             
-            XS_total += speeds.get("xS");
-            YS_total += speeds.get("yS");
+            XS_current += speeds.get("xS");
+            YS_current += speeds.get("yS");
+            
+            
         
+        }
+        
+        System.out.println("current_total_force is " + current_total_force + "and tmp_total_force is " + tmp_total_force);
+        
+        double total_f = current_total_force + tmp_total_force;
+
+        if ( Math.abs(total_f) <= MAX_FORCE){
+            
+            XS_total += XS_current;
+            YS_total += YS_current;
+            
+            current_total_force = total_f;
+            
         }
 
         //The orginal point of the canvas is on the top left
         //Thus, x dim increases while y decreases
+        //System.out.println("XS_total is " + XS_total + " and YS_total " + YS_total);
+        
+        /*
+        if (XS_total > MAX_Y)
+            XS_total = MAX_Y;
+        else if (XS_total < (0-MAX_Y))
+            XS_total = 0-MAX_Y;
+        
+        if (YS_total > MAX_Y)
+            YS_total = MAX_Y;
+        else if (YS_total < (0 - MAX_Y))
+            YS_total = 0-MAX_Y;
+        */
+        
+        
+        System.out.println("new XS_total is " + XS_total + " and XS_current " + XS_current + " in " + TaskManager.getCurrentTick());
+        
+        
     	p.x= p.x + XS_total * t;
     	p.y= p.y - YS_total * t;
         
@@ -199,6 +250,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         xS = force2speed(xF);
         yS = force2speed(yF);
+        
+        //System.out.println("xS: " + xS + "yS: " + yS);
         
         output_speed.put("xS", xS);
         output_speed.put("yS", yS);
@@ -235,8 +288,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         double speed;
         
-        //here we just use a 'fake' fomula
-        speed = (MOTOR_POWER/50)*force;
+        //
+        speed = (force/MASS);
         
         return speed;
         
@@ -265,6 +318,19 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
             if (arrayIndex < MAX_TICK_SIZE){
                 
+                 if (arrayIndex > 0){//if there is at least one item in the array
+                    double lastTick = distanceData[arrayIndex - 1][1];
+
+                    //System.out.println("arrayIndex is " + arrayIndex + " lastTick:" + lastTick + " tick:" + tick);
+
+                    if (lastTick == tick){//ignore the repeated tick
+
+                        //System.out.println("arrayIndex is " + arrayIndex + " returnred tick is " + tick);
+
+                        return;
+                    }
+                }
+                
                 //System.out.println("arrayIndex is " + arrayIndex);
                 distanceData[arrayIndex][0] = distance;
                 distanceData[arrayIndex][1] = tick;
@@ -281,14 +347,24 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 System.out.println("Saving the distance data...");
                 
                 //Save the distance data in the format of Matlab
-                MLDouble mlDouble1 = new MLDouble("dis10", distanceData);
+                MLDouble mlDouble1 = new MLDouble("distance", distanceData);
 
                 ArrayList list1 = new ArrayList();
 
                 list1.add(mlDouble1);
+                
+                /*
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+                Date date = new Date();
+                
+                String dateName =  dateFormat.format(date);
+                */
+
+                String dateName = Long.toString(System.currentTimeMillis());
 
                 try{
-                    new MatFileWriter(".\\data\\distanceBlank10.mat", list1);
+                    new MatFileWriter(".\\data\\dis" + blankDuration + "\\dis" + blankDuration + "_" +dateName+ ".mat", list1);
                 }
                 catch(IOException e)
                 {
