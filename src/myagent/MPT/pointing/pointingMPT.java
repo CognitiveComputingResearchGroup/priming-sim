@@ -51,6 +51,16 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
     
     public static final double TENSION_TO_FORCE_RATE = 0.01;
     
+    public double current_adding_t = 1, current_removing_t = 1;
+    
+    //public int SIGMOID_WIDTH = 25;
+    
+    //public static final double theta1 = 8.0, theta2 = 100.0;
+    
+    public static final double TETION_UNIT = 1000.0;
+    
+    
+    
     //private double FOO;
 
     @Override
@@ -85,14 +95,23 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
     public void addTesion (double val){
         
         if (val > 0.0){
+            
+            //double addingRate = theta1/(1+Math.pow(Math.E, current_adding_t/SIGMOID_WIDTH));
+            
+            //current_adding_t += 1;
+
+            //tension = tension + val*addingRate;
             tension = tension + val;
         }
     }
     
     public void removeTension(double val){
         
-        if (val < tension){
-            tension = tension - val;
+        if (val >= 0.0 && val < tension){
+            
+            double removingRate = tension/TETION_UNIT;
+                    
+            tension = tension - val*removingRate;
         } else{
             tension = 0.0;
         }
@@ -137,6 +156,8 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
     public void update() {
 
         CommandVal.put("direction", MOVING_DIRECTION_DEF);
+        
+        System.out.println("the tension is " + tension);
         
         double force_val = tension*TENSION_TO_FORCE_RATE;
         
