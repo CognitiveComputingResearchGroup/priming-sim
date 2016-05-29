@@ -138,8 +138,8 @@ public class PrimingEnvironmentPanel extends GuiPanelImpl {
 	}
 
 	private static final int DOT_SIZE=1;
-	private static final int DISC_SIZE=9;
-	private static final int ANNULI_SIZE=10;
+	private static final int DISC_SIZE=6;
+	private static final int ANNULI_SIZE=7;
 	private class ImagePanel extends JPanel {
 
 		private Dimension dimension = new Dimension();

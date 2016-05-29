@@ -29,8 +29,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
     public static final int FIXATION_PERIOD=1;
     public static final int PRIME_DURATION=10;
 
-    public static final int ENVIRONMENT_WIDTH = 100;
-    public static final int ENVIRONMENT_HEIGHT = 100;
+    public static final int ENVIRONMENT_WIDTH = 70;
+    public static final int ENVIRONMENT_HEIGHT = 70;
 
     private Map<String, Object> blankData= new HashMap<String, Object>();
     private Map<String, Object> targetData= new HashMap<String, Object>();
@@ -55,7 +55,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
     public double XS_total = 0.0, YS_total = 0.0;
     
-    public static final double MAX_Y = 0.35;
+    public static final double MAX_Y = 0.5;
     
     public static final double MAX_FORCE = MAX_Y*MASS;
     public double current_total_force = 0.0;

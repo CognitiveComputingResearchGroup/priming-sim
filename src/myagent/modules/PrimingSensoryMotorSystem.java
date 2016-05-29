@@ -232,8 +232,10 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             return;//ignore the empty states
         
         //update
-        for (Object theMP: currentMPs.values()){
-            ((MPT)theMP).update();
+        if (actionInProgress == true){
+            for (Object theMP: currentMPs.values()){
+                ((MPT)theMP).update();
+            }
         }
         
         //priming: cue a new MPT to execute
