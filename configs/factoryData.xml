@@ -14,6 +14,8 @@
             <class>edu.memphis.ccrg.lida.framework.strategies.LinearExciteStrategy
             </class>
             <param name="m" type="double">1.0</param>
+            <param name="upperBound" type="double">1.0</param>
+            <param name="lowerBound" type="double">0.0</param>
         </strategy>
         <strategy flyweight="true" name="defaultDecay" type="decay">
             <class>edu.memphis.ccrg.lida.framework.strategies.LinearDecayStrategy
@@ -70,34 +72,65 @@
     <nodes>
         <node name="NodeImpl">
             <class>edu.memphis.ccrg.lida.framework.shared.NodeImpl</class>
-            <defaultstrategy>otherDecay</defaultstrategy>
+            <defaultstrategy>defaultDecay</defaultstrategy>
             <defaultstrategy>defaultExcite</defaultstrategy>
         </node>
         <node name="PamNodeImpl">
             <class>edu.memphis.ccrg.lida.pam.PamNodeImpl</class>
-            <defaultstrategy>otherDecay</defaultstrategy>
+            <defaultstrategy>defaultDecay</defaultstrategy>
             <defaultstrategy>defaultExcite</defaultstrategy>
-            <param name="learnable.baseLevelActivation" type="double">1.0</param>
-            <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
+            <param name="learnable.baseLevelActivation" type="double">0.1</param>
+            <param name="learnable.baseLevelRemovalThreshold" type="double">0.0</param>
             <param name="learnable.baseLevelDecayStrategy" type="string">slowDecay</param>
-            <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
+            <param name="learnable.baseLevelExciteStrategy" type="string">slowExcite</param>
             <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
         </node>
     </nodes>
     <links>
         <link name="LinkImpl">
             <class>edu.memphis.ccrg.lida.framework.shared.LinkImpl</class>
-            <defaultstrategy>otherDecay</defaultstrategy>
+            <defaultstrategy>defaultDecay</defaultstrategy>
             <defaultstrategy>defaultExcite</defaultstrategy>
         </link>
         <link name="PamLinkImpl">
             <class>edu.memphis.ccrg.lida.pam.PamLinkImpl</class>
-            <defaultstrategy>otherDecay</defaultstrategy>
+            <defaultstrategy>defaultDecay</defaultstrategy>
             <defaultstrategy>defaultExcite</defaultstrategy>
+            <param name="learnable.baseLevelActivation" type="double">0.1</param>
+            <param name="learnable.baseLevelRemovalThreshold" type="double">0.0</param>
+            <param name="learnable.baseLevelDecayStrategy" type="string">slowDecay</param>
+            <param name="learnable.baseLevelExciteStrategy" type="string">slowExcite</param>
+            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
+            
+            <!-- original one (cause WARNINGs)
             <param name="baseLevelDecayStrategy" type="string">slowDecay</param>
             <param name="baseLevelExciteStrategy" type="string">slowExcite</param>
             <param name="baseLevelRemovalThreshold" type="double">0.0</param>
             <param name="baseLevelActivation" type="double">1.0</param>
+            -->
+            <!-- the same as the above node one
+            <param name="learnable.baseLevelActivation" type="double">1.0</param>
+            <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
+            <param name="learnable.baseLevelDecayStrategy" type="string">slowDecay</param>
+            <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
+            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
+            -->
+            <!-- default one
+            <param name="learnable.baseLevelActivation" type="double">0.5</param>
+            <param name="learnable.baseLevelRemovalThreshold" type="double">-1.0</param>
+            <param name="learnable.baseLevelDecayStrategy" type="string">defaultDecay</param>
+            <param name="learnable.baseLevelExciteStrategy" type="string">defaultExcite</param>
+            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
+            -->
+            <!--the content is from the original one while using the new format (no WARNINGs)
+            <param name="learnable.baseLevelActivation" type="double">1.0</param>
+            <param name="learnable.baseLevelRemovalThreshold" type="double">0.0</param>
+            <param name="learnable.baseLevelDecayStrategy" type="string">slowDecay</param>
+            <param name="learnable.baseLevelExciteStrategy" type="string">slowExcite</param>
+            <param name="learnable.totalActivationStrategy" type="string">DefaultTotalActivation</param>
+            -->
+            
+            
         </link>
     </links>
     <tasks>

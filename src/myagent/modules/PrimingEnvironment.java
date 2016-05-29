@@ -111,6 +111,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
     @Override
     public Object getState(Map<String, ?> arg0) {
+
         
         if(TaskManager.getCurrentTick()<=FIXATION_PERIOD){
                 return blankData;
@@ -143,6 +144,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 
                 return targetData;
         }
+
               
     }
                 
@@ -170,7 +172,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
             force = (Double)((Map<String, Object>) theCmd).get("Force");
             direction = (Double)((Map<String, Object>) theCmd).get("Direction");
             
-            System.out.println("output:: " + motorName + "-->" + force);
+            //System.out.println("output:: " + motorName + "-->" + force);
             
             if (motorName.equals(UPPER_MOTOR_NAME)){
             
@@ -194,7 +196,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         }
         
-        System.out.println("current_total_force is " + current_total_force + "and tmp_total_force is " + tmp_total_force);
+        //System.out.println("current_total_force is " + current_total_force + "and tmp_total_force is " + tmp_total_force);
         
         double total_f = current_total_force + tmp_total_force;
 
@@ -224,7 +226,7 @@ public class PrimingEnvironment extends EnvironmentImpl{
         */
         
         
-        System.out.println("new XS_total is " + XS_total + " and XS_current " + XS_current + " in " + TaskManager.getCurrentTick());
+        //System.out.println("new XS_total is " + XS_total + " and XS_current " + XS_current + " in " + TaskManager.getCurrentTick());
         
         
     	p.x= p.x + XS_total * t;

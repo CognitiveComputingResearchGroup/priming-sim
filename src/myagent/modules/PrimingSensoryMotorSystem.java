@@ -65,7 +65,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
        
     public static final double TENSION_ADDED_PERRUN = 10.0;
     
-    public static final double TENSION_REMOVED_PERRUN = 10.0;
+    public static final double TENSION_REMOVED_PERRUN = 8.0;
     
     public static final String target_color = "red";
     
@@ -152,7 +152,8 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
         }
         
         if (action != null) {
-            logger.log(Level.INFO, "receiveAction starts...");
+            //logger.log(Level.INFO, "receiveAction starts..." + " at " + TaskManager.getCurrentTick());
+            System.out.println("receiveAction starts..." + " at " + TaskManager.getCurrentTick());
             
             Object selectedAlg = actionAlgorithmMap.get((Number)action.getId());
             
@@ -186,7 +187,7 @@ public class PrimingSensoryMotorSystem extends SensoryMotorSystem {
             //control the selected MP to have some default force
             selectedMP.setBehavioralSelected(true);
             
-            System.out.println("The action execution starts...");
+            System.out.println("The action execution starts..." );
             
             //online control
             //currentMP.onlineControl();

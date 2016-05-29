@@ -5,6 +5,7 @@
  */
 package myagent.MPT.pointing;
 
+import edu.memphis.ccrg.lida.framework.tasks.TaskManager;
 import java.util.Map;
 
 import edu.memphis.ccrg.lida.sensorymotormemory.sensorymotorsystem.MPT.FSM;
@@ -42,24 +43,22 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
     //to record the running time of spcify() and update()
     //public int current_t = 1;
     
-    //public static final double theta1 = 2.0, theta2 = 10.0, theta3 = 3.0;
-    
     //public static final int Ellipse_A = 30, Ellipse_B = 1;
 
     //default direction in radians (45 degrees)
     public static final double MOVING_DIRECTION_DEF = Math.PI/4;
     
-    public static final double TENSION_TO_FORCE_RATE = 0.01;
+    public static final double TENSION_TO_FORCE_RATE = 0.02;
     
-    public double current_adding_t = 1, current_removing_t = 1;
+    public double current_adding_t = 1.0, current_removing_t = 1.0;
     
-    //public int SIGMOID_WIDTH = 25;
+    public double SIGMOID_WIDTH = 100.0, SIGMOID_HEIGH = 1500.0;
     
     //public static final double theta1 = 8.0, theta2 = 100.0;
     
     public static final double TETION_UNIT = 1000.0;
     
-    
+    public static final double theta1 = -0.04, theta2 = 10.0;
     
     //private double FOO;
 
@@ -80,6 +79,9 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
         CommandVal.put("force", 0.0);
         CommandVal.put("direction", 0.0);
         
+        current_adding_t = 1.0;
+        current_removing_t = 1.0;
+        
     }
     
     public abstract void specifyTheFSM();
@@ -96,12 +98,19 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
         
         if (val > 0.0){
             
-            //double addingRate = theta1/(1+Math.pow(Math.E, current_adding_t/SIGMOID_WIDTH));
+            //double updatedTension = (2*SIGMOID_HEIGH)/(1+Math.pow(Math.E, 0-(current_adding_t/SIGMOID_WIDTH))) - SIGMOID_HEIGH;
             
-            //current_adding_t += 1;
+            double addedTension = theta1*current_adding_t + theta2;
+            
+            //System.out.println("addedTension is " + addedTension + " with current_adding_t-->" + current_adding_t + " in " + TaskManager.getCurrentTick());
 
-            //tension = tension + val*addingRate;
-            tension = tension + val;
+            if (addedTension < 0)
+                addedTension = 0;
+            
+            tension = tension + addedTension;
+            //tension = tension + val;
+            
+            current_adding_t+= 1;
         }
     }
     
@@ -109,9 +118,12 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
         
         if (val >= 0.0 && val < tension){
             
-            double removingRate = tension/TETION_UNIT;
+            //double removingRate = tension/TETION_UNIT;
+            
+            //removingRate = 1;
                     
-            tension = tension - val*removingRate;
+            //tension = tension - val*removingRate;
+            tension = tension - val;
         } else{
             tension = 0.0;
         }
@@ -157,7 +169,7 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
 
         CommandVal.put("direction", MOVING_DIRECTION_DEF);
         
-        System.out.println("the tension is " + tension);
+        //System.out.println("the tension is " + tension);
         
         double force_val = tension*TENSION_TO_FORCE_RATE;
         
