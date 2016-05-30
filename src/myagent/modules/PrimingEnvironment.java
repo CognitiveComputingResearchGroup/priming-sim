@@ -55,16 +55,39 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
     public double XS_total = 0.0, YS_total = 0.0;
     
-    public static final double MAX_Y = 0.5;
     
-    public static final double MAX_FORCE = MAX_Y*MASS;
+    //////for the movement before the final part
+    public static final double MAX_Y = 0.16;
+    
+    public static final double MAX_TOTAL_FORCE = MAX_Y*MASS;
     public double current_total_force = 0.0;
     
+    //////for the movement at its arrival part
+    public static final double ARRIVAL_BOUNDARY = 10;
+    
+    public static final double ARRIVAL_DURATION = 100;
+    public static final double SIGMOID_ORI_WIDTH = 12.0;
+    
+    //theta1 == sigmoid_height 
+    public static final double theta1= 2*(MAX_TOTAL_FORCE/ARRIVAL_DURATION);
+    //theta2 == sigmoid_center_x
+    public static final double theta2 = ARRIVAL_DURATION/2;
+    //theta3 == sigmoid width changing rate
+    public static final double theta3 = ARRIVAL_DURATION/SIGMOID_ORI_WIDTH;
+    
+    //linear function y=k*x+b
+    public double theta_K_X = 1.0, theta_K_Y = 1.0;
+    public double theta_B_X = 0.0, theta_B_Y = 0.0;
+    
+    public boolean in_arrival = false;
+    
+    public double arrival_tick = 0.0;
+
     ///////////////For the output of experimental results//////////////////
     private final static int MAX_TICK_SIZE = 1000;
     
     private final static double TARGET_X = ENVIRONMENT_WIDTH*5/6;
-    private final static double TARGET_y = ENVIRONMENT_WIDTH/6;
+    private final static double TARGET_Y = ENVIRONMENT_WIDTH/6;
     
     //two data in one item: distance and tick
     double[][] distanceData = new double[MAX_TICK_SIZE][2];
@@ -72,6 +95,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
     int arrayIndex = 0;
     
     boolean ouputdata_flag = true;
+    
+    public double lastDistance = -1.0;
 
 
     @Override
@@ -106,6 +131,8 @@ public class PrimingEnvironment extends EnvironmentImpl{
         }
         
         arrayIndex = 0;
+        
+        in_arrival = false;
         
     }
 
@@ -166,69 +193,104 @@ public class PrimingEnvironment extends EnvironmentImpl{
         
         double tmp_total_force = 0.0;
         
-        for (Object theCmd: ((Map)commands).values()){
-            motorName = (String)((Map<String, Object>) theCmd).get("MotorName");
+        double distance = Math.sqrt(Math.pow((TARGET_X - p.x), 2) + Math.pow((TARGET_Y - p.y), 2));
+        
+        if (distance > ARRIVAL_BOUNDARY){
+            for (Object theCmd: ((Map)commands).values()){
+                motorName = (String)((Map<String, Object>) theCmd).get("MotorName");
 
-            force = (Double)((Map<String, Object>) theCmd).get("Force");
-            direction = (Double)((Map<String, Object>) theCmd).get("Direction");
-            
-            //System.out.println("output:: " + motorName + "-->" + force);
-            
-            if (motorName.equals(UPPER_MOTOR_NAME)){
-            
-                speeds = upperMotorControl(force, direction);
-                
-                tmp_total_force +=force;
+                force = (Double)((Map<String, Object>) theCmd).get("Force");
+                direction = (Double)((Map<String, Object>) theCmd).get("Direction");
 
-            } else if (motorName.equals(LOWER_MOTOR_NAME)){
-                speeds = lowerMotorControl(force, direction + Math.PI);
-                
-                tmp_total_force -=force;
+                //System.out.println("output:: " + motorName + "-->" + force);
 
-            } else{
-                logger.log(Level.WARNING, "Required motor is not available!", TaskManager.getCurrentTick());
+                if (motorName.equals(UPPER_MOTOR_NAME)){
+
+                    speeds = upperMotorControl(force, direction);
+
+                    tmp_total_force +=force;
+
+                } else if (motorName.equals(LOWER_MOTOR_NAME)){
+                    speeds = lowerMotorControl(force, direction + Math.PI);
+
+                    tmp_total_force -=force;
+
+                } else{
+                    logger.log(Level.WARNING, "Required motor is not available!", TaskManager.getCurrentTick());
+                }
+
+                XS_current += speeds.get("xS");
+                YS_current += speeds.get("yS");
+
+            }
+
+            double total_f = current_total_force + tmp_total_force;
+
+            if ( Math.abs(total_f) <= MAX_TOTAL_FORCE){
+
+                XS_total += XS_current;
+                YS_total += YS_current;
+
+                current_total_force = total_f;
+
+            }
+            //System.out.println("normal::XS_total is " + XS_total + "and XS_current is " + XS_current);
+        } else{ // if distance <= ARRIVAL_BOUNDARY
+            
+            synchronized(this) {
+                if (in_arrival == false){
+
+                    double starting_XS = XS_total, starting_YS = YS_total;
+
+                    theta_K_X = 0 - Math.pow(starting_XS, 2)/(2*Math.sqrt(Math.pow(ARRIVAL_BOUNDARY,2)/2));
+                    theta_K_Y = 0 - Math.pow(starting_YS, 2)/(2*Math.sqrt(Math.pow(ARRIVAL_BOUNDARY,2)/2));
+
+                    theta_B_X = starting_XS;
+                    theta_B_Y = starting_YS;
+
+                    in_arrival = true;
+
+                }
             }
             
-            XS_current += speeds.get("xS");
-            YS_current += speeds.get("yS");
+            double arrival_XS = theta_K_X*arrival_tick + theta_B_X;
+            double arrival_YS = theta_K_Y*arrival_tick + theta_B_Y;
             
             
-        
-        }
-        
-        //System.out.println("current_total_force is " + current_total_force + "and tmp_total_force is " + tmp_total_force);
-        
-        double total_f = current_total_force + tmp_total_force;
+            
+            if (arrival_XS < 0 && arrival_YS < 0){
+                XS_total = 0;
+                YS_total = 0;
 
-        if ( Math.abs(total_f) <= MAX_FORCE){
-            
-            XS_total += XS_current;
-            YS_total += YS_current;
-            
-            current_total_force = total_f;
-            
-        }
+            } else{
+                if (arrival_XS < 0)
+                    XS_total = 0;
+                else
+                    XS_total = arrival_XS;
+                
+                if (arrival_YS < 0)
+                    YS_total = 0;
+                else
+                    YS_total = arrival_YS;
 
-        //The orginal point of the canvas is on the top left
-        //Thus, x dim increases while y decreases
-        //System.out.println("XS_total is " + XS_total + " and YS_total " + YS_total);
+                
+                if (lastDistance > 0 && distance > lastDistance){
+                    XS_total = 0;
+                    YS_total = 0;
+                } else {
+                    arrival_tick += 1;
+                    
+                    lastDistance = distance;
+                }
+            }
+
+        } 
         
-        /*
-        if (XS_total > MAX_Y)
-            XS_total = MAX_Y;
-        else if (XS_total < (0-MAX_Y))
-            XS_total = 0-MAX_Y;
+        System.out.println(" distance is "+ distance +" XS_total is " + XS_total + " YS_total is " + YS_total);
         
-        if (YS_total > MAX_Y)
-            YS_total = MAX_Y;
-        else if (YS_total < (0 - MAX_Y))
-            YS_total = 0-MAX_Y;
-        */
+        System.out.println("p.x is " + p.x + " and p.y is " + p.y);
         
-        
-        //System.out.println("new XS_total is " + XS_total + " and XS_current " + XS_current + " in " + TaskManager.getCurrentTick());
-        
-        
+        //update the speed
     	p.x= p.x + XS_total * t;
     	p.y= p.y - YS_total * t;
         
@@ -306,13 +368,16 @@ public class PrimingEnvironment extends EnvironmentImpl{
     
     private class generateDistanceToTarget extends FrameworkTaskImpl {
 
-
+        double lastDis = -1.0;
+        
+        double repeat_counting = 0;
+        
         @Override
         protected void runThisFrameworkTask() {
             
             double distance = 0.0, tick = 0;
 
-            distance = Math.sqrt(Math.pow((TARGET_X - p.x), 2) + Math.pow((TARGET_y - p.y), 2));
+            distance = Math.sqrt(Math.pow((TARGET_X - p.x), 2) + Math.pow((TARGET_Y - p.y), 2));
 
             tick = TaskManager.getCurrentTick();
 
@@ -332,19 +397,29 @@ public class PrimingEnvironment extends EnvironmentImpl{
                         return;
                     }
                 }
-                
-                //System.out.println("arrayIndex is " + arrayIndex);
-                distanceData[arrayIndex][0] = distance;
-                distanceData[arrayIndex][1] = tick;
 
                 //System.out.println("dis:" + distance + " tick:" + tick);
                 
-                if (distance < 1.0){//to make the next one to be the time to record data
-                    arrayIndex = MAX_TICK_SIZE - 1;
+                if ((distance <= 0.1) || (lastDis > 0 && lastDis < ARRIVAL_BOUNDARY && 
+                        (distance > lastDis || repeat_counting >= 5))){
+                    //to make the next one to be the time to record data
+                    arrayIndex = MAX_TICK_SIZE;
+                } else {
+                    
+                    if (distance == lastDis){
+                        repeat_counting++;
+                    } else {
+                        repeat_counting = 0;
+                    }
+                    distanceData[arrayIndex][0] = distance;
+                    distanceData[arrayIndex][1] = tick;
+                    
+                    arrayIndex = arrayIndex + 1;
+                    
+                    lastDis = distance;
                 }
-
-                arrayIndex = arrayIndex + 1;
                 
+
             } else {// (arrayIndex >= MAX_TICK_SIZE)
                 System.out.println("Saving the distance data...");
                 
