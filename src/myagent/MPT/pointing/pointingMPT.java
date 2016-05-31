@@ -58,7 +58,7 @@ public abstract class pointingMPT extends SubsumptionMPTImpl implements MPTensio
     
     public static final double TETION_UNIT = 1000.0;
     
-    public static final double theta1 = -0.04, theta2 = 10.0;
+    public static final double theta1 = -0.1, theta2 = 14.5;
     
     //private double FOO;
 

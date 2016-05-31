@@ -97,11 +97,15 @@ public class PrimingEnvironment extends EnvironmentImpl{
     boolean ouputdata_flag = true;
     
     public double lastDistance = -1.0;
+    
+    private String consistent_flag = "true";
 
 
     @Override
     public void init(){
         blankDuration=(int) getParam("blankDuration", 10);
+        
+        consistent_flag = String.valueOf((boolean) getParam("consistent", true));
 
         blankData.put("dot_color","white");
         blankData.put("dot_Xpos", 1);
@@ -286,9 +290,9 @@ public class PrimingEnvironment extends EnvironmentImpl{
 
         } 
         
-        System.out.println(" distance is "+ distance +" XS_total is " + XS_total + " YS_total is " + YS_total);
+        //System.out.println(" distance is "+ distance +" XS_total is " + XS_total + " YS_total is " + YS_total);
         
-        System.out.println("p.x is " + p.x + " and p.y is " + p.y);
+        //System.out.println("p.x is " + p.x + " and p.y is " + p.y);
         
         //update the speed
     	p.x= p.x + XS_total * t;
@@ -439,9 +443,10 @@ public class PrimingEnvironment extends EnvironmentImpl{
                 */
 
                 String dateName = Long.toString(System.currentTimeMillis());
+                
 
                 try{
-                    new MatFileWriter(".\\data\\dis" + blankDuration + "\\dis" + blankDuration + "_" +dateName+ ".mat", list1);
+                    new MatFileWriter(".\\data\\dis" + blankDuration +"_" + consistent_flag + "\\dis" + blankDuration + "_" +dateName+ ".mat", list1);
                 }
                 catch(IOException e)
                 {
